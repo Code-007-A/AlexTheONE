@@ -453,4 +453,754 @@ body {
 
 <div id="flash"></div>
 
-<div class="scanlines"></
+<div class="scanlines"></div>
+
+<div class="screenGlow"></div>
+
+
+
+<script>
+
+/* =========================================================
+   MATRIX ENGINE
+========================================================= */
+
+const canvas =
+    document.getElementById("matrix");
+
+const ctx =
+    canvas.getContext("2d");
+
+
+let width;
+let height;
+
+let fontSize = 18;
+
+let columns;
+
+let drops = [];
+
+
+/*
+    Matrix character set
+*/
+
+const matrixCharacters =
+
+"アァカサタナハマヤラワ0123456789" +
+
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+
+"#$%&*@";
+
+
+/* =========================================================
+   RESIZE CANVAS
+========================================================= */
+
+function resizeCanvas() {
+
+    width =
+        canvas.width =
+        window.innerWidth;
+
+    height =
+        canvas.height =
+        window.innerHeight;
+
+
+    columns =
+        Math.floor(
+            width / fontSize
+        );
+
+
+    drops = [];
+
+
+    for (
+        let i = 0;
+        i < columns;
+        i++
+    ) {
+
+        drops[i] =
+            Math.random() * -50;
+    }
+}
+
+
+resizeCanvas();
+
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+
+/* =========================================================
+   MATRIX RAIN
+========================================================= */
+
+function drawMatrix() {
+
+
+    /*
+        Transparent black creates
+        the trailing effect.
+    */
+
+    ctx.fillStyle =
+        "rgba(0,0,0,0.075)";
+
+
+    ctx.fillRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    ctx.font =
+        fontSize +
+        "px Courier New";
+
+
+    for (
+        let i = 0;
+        i < drops.length;
+        i++
+    ) {
+
+
+        const character =
+
+            matrixCharacters[
+                Math.floor(
+                    Math.random() *
+                    matrixCharacters.length
+                )
+            ];
+
+
+        /*
+            Random brightness
+        */
+
+        const brightness =
+            Math.random();
+
+
+        if (
+            brightness > .94
+        ) {
+
+            ctx.fillStyle =
+                "#ffffff";
+
+        }
+
+        else if (
+            brightness > .75
+        ) {
+
+            ctx.fillStyle =
+                "#66ff88";
+
+        }
+
+        else {
+
+            ctx.fillStyle =
+                "#00ff41";
+        }
+
+
+        ctx.fillText(
+
+            character,
+
+            i * fontSize,
+
+            drops[i] *
+            fontSize
+        );
+
+
+        /*
+            Restart streams
+        */
+
+        if (
+
+            drops[i] *
+            fontSize >
+            height
+
+            &&
+
+            Math.random() > .975
+
+        ) {
+
+            drops[i] = 0;
+        }
+
+
+        drops[i] += .45;
+    }
+
+
+    requestAnimationFrame(
+        drawMatrix
+    );
+}
+
+
+drawMatrix();
+
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const name =
+    document.getElementById("name");
+
+const message =
+    document.getElementById("message");
+
+const instruction =
+    document.getElementById(
+        "instruction"
+    );
+
+const flash =
+    document.getElementById("flash");
+
+
+
+/* =========================================================
+   SCRAMBLE CHARACTERS
+========================================================= */
+
+const glitchCharacters =
+
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+
+"0123456789" +
+
+"@#$%&*<>[]{}" +
+
+"アカサタナハマヤラ";
+
+
+/* =========================================================
+   GENERATE SCRAMBLED TEXT
+========================================================= */
+
+function scrambleText(
+    target,
+    progress
+) {
+
+    let output = "";
+
+
+    for (
+        let i = 0;
+        i < target.length;
+        i++
+    ) {
+
+
+        /*
+            Spaces remain spaces.
+        */
+
+        if (
+            target[i] === " "
+            ||
+            target[i] === "\n"
+            ||
+            target[i] === "-"
+            ||
+            target[i] === ";"
+        ) {
+
+            output +=
+                target[i];
+
+            continue;
+        }
+
+
+        /*
+            Each character gets
+            its own decoding point.
+        */
+
+        const characterProgress =
+
+            progress *
+            target.length
+            -
+            i;
+
+
+        if (
+            characterProgress >= 1
+        ) {
+
+            output +=
+                target[i];
+
+        }
+
+        else {
+
+            output +=
+
+                glitchCharacters[
+                    Math.floor(
+                        Math.random() *
+                        glitchCharacters.length
+                    )
+                ];
+        }
+    }
+
+
+    return output;
+}
+
+
+
+/* =========================================================
+   SCROLL
+========================================================= */
+
+window.addEventListener(
+    "scroll",
+    updateScroll
+);
+
+
+function updateScroll() {
+
+
+    /*
+        Calculate total scroll.
+    */
+
+    const maxScroll =
+
+        document.documentElement
+        .scrollHeight
+        -
+        window.innerHeight;
+
+
+    let scrollProgress =
+
+        window.scrollY /
+        maxScroll;
+
+
+    /*
+        Keep between 0 and 1.
+    */
+
+    scrollProgress =
+
+        Math.max(
+            0,
+            Math.min(
+                1,
+                scrollProgress
+            )
+        );
+
+
+
+    /* =====================================================
+       ALEX SECTION
+    ===================================================== */
+
+    /*
+        ALEX begins appearing
+        around 10% scroll.
+    */
+
+    const alexProgress =
+
+        Math.max(
+            0,
+            Math.min(
+                1,
+                (scrollProgress - .08) /
+                .30
+            )
+        );
+
+
+    /*
+        Fade ALEX in.
+    */
+
+    name.style.opacity =
+        alexProgress;
+
+
+    /*
+        Scale ALEX.
+    */
+
+    const alexScale =
+
+        .75 +
+        alexProgress * .25;
+
+
+    name.style.transform =
+
+        `translate(-50%, -50%)
+         scale(${alexScale})`;
+
+
+    /*
+        Scramble ALEX.
+    */
+
+    name.textContent =
+
+        scrambleText(
+            "ALEX",
+            alexProgress
+        );
+
+
+    /*
+        Glitch while decoding.
+    */
+
+    if (
+
+        alexProgress > 0 &&
+        alexProgress < 1
+
+    ) {
+
+        name.classList.add(
+            "glitch"
+        );
+
+    }
+
+    else {
+
+        name.classList.remove(
+            "glitch"
+        );
+    }
+
+
+
+    /* =====================================================
+       FINAL MESSAGE
+    ===================================================== */
+
+    /*
+        The final message begins
+        appearing during the last
+        ~25% of the page.
+    */
+
+    const messageProgress =
+
+        Math.max(
+            0,
+            Math.min(
+                1,
+                (scrollProgress - .72) /
+                .24
+            )
+        );
+
+
+    /*
+        Fade final message in.
+    */
+
+    message.style.opacity =
+        messageProgress;
+
+
+    /*
+        Scale final message.
+    */
+
+    const messageScale =
+
+        .90 +
+        messageProgress * .10;
+
+
+    message.style.transform =
+
+        `translate(-50%, -50%)
+         scale(${messageScale})`;
+
+
+    /*
+        Decode message.
+    */
+
+    message.innerHTML =
+
+        scrambleTextHTML(
+            "You're the ONE;\nHappy Work-Anniversary!",
+            messageProgress
+        );
+
+
+    /*
+        Glitch effect.
+    */
+
+    if (
+
+        messageProgress > 0 &&
+        messageProgress < 1
+
+    ) {
+
+        message.classList.add(
+            "glitch"
+        );
+
+    }
+
+    else {
+
+        message.classList.remove(
+            "glitch"
+        );
+    }
+
+
+
+    /* =====================================================
+       ALEX FADES AWAY
+    ===================================================== */
+
+    if (
+        scrollProgress > .65
+    ) {
+
+        const fadeOut =
+
+            Math.max(
+                0,
+                1 -
+                (scrollProgress - .65) /
+                .12
+            );
+
+
+        name.style.opacity =
+            fadeOut;
+    }
+
+
+
+    /* =====================================================
+       INSTRUCTION
+    ===================================================== */
+
+    if (
+        scrollProgress < .08
+    ) {
+
+        instruction.style.opacity =
+            1;
+
+    }
+
+    else {
+
+        instruction.style.opacity =
+
+            Math.max(
+                0,
+                1 -
+                scrollProgress * 4
+            );
+    }
+
+
+
+    /* =====================================================
+       FINAL FLASH
+    ===================================================== */
+
+    /*
+        Tiny flash when reaching
+        the very bottom.
+    */
+
+    if (
+        scrollProgress > .98
+    ) {
+
+        const flashAmount =
+
+            (scrollProgress - .98)
+            * 10;
+
+
+        flash.style.opacity =
+
+            Math.min(
+                .08,
+                flashAmount
+            );
+
+    }
+
+    else {
+
+        flash.style.opacity = 0;
+    }
+
+}
+
+
+
+/* =========================================================
+   HTML VERSION OF SCRAMBLE
+========================================================= */
+
+function scrambleTextHTML(
+    target,
+    progress
+) {
+
+    let output = "";
+
+
+    for (
+        let i = 0;
+        i < target.length;
+        i++
+    ) {
+
+
+        const character =
+            target[i];
+
+
+        /*
+            Preserve line breaks.
+        */
+
+        if (
+            character === "\n"
+        ) {
+
+            output +=
+                "<br>";
+
+            continue;
+        }
+
+
+        /*
+            Preserve spaces.
+        */
+
+        if (
+            character === " "
+        ) {
+
+            output +=
+                "&nbsp;";
+
+            continue;
+        }
+
+
+        /*
+            Preserve punctuation.
+        */
+
+        if (
+            character === "-" ||
+            character === "!" ||
+            character === ";"
+        ) {
+
+            output +=
+                character;
+
+            continue;
+        }
+
+
+        /*
+            Decode character
+            progressively.
+        */
+
+        const characterProgress =
+
+            progress *
+            target.length
+            -
+            i;
+
+
+        if (
+            characterProgress >= 1
+        ) {
+
+            output +=
+                character;
+
+        }
+
+        else {
+
+            output +=
+
+                glitchCharacters[
+                    Math.floor(
+                        Math.random() *
+                        glitchCharacters.length
+                    )
+                ];
+        }
+    }
+
+
+    return output;
+}
+
+
+
+/* =========================================================
+   INITIAL STATE
+========================================================= */
+
+updateScroll();
+
+</script>
+
+</body>
+
+</html>
+```
