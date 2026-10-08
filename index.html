@@ -43,7 +43,7 @@ body {
         THE PAGE LONGER OR SHORTER.
     */
 
-    height: 1100vh;
+    height: 1000vh;
 
     overflow-x: hidden;
 }
@@ -219,12 +219,12 @@ body {
 
     font-size:
         clamp(
-            50px,
-            5.2vw,
-            50px;
+            18px,
+            3.2vw,
+            48px
         );
 
-    font-weight: bold;
+    font-weight: normal;
 
     line-height: 1.4;
 
@@ -460,3 +460,882 @@ body {
 <div id="flash"></div>
 
 <div class="scanlines"></div>
+
+<div class="screenGlow"></div>
+
+
+
+<script>
+
+/* =========================================================
+   MATRIX ENGINE
+========================================================= */
+
+const canvas =
+    document.getElementById("matrix");
+
+const ctx =
+    canvas.getContext("2d");
+
+
+let width;
+let height;
+
+let fontSize = 18;
+
+let columns;
+
+let drops = [];
+
+
+const matrixCharacters =
+
+"アァカサタナハマヤラワ0123456789" +
+
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+
+"#$%&*@";
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+function resizeCanvas() {
+
+    width =
+        canvas.width =
+        window.innerWidth;
+
+    height =
+        canvas.height =
+        window.innerHeight;
+
+
+    columns =
+        Math.floor(
+            width / fontSize
+        );
+
+
+    drops = [];
+
+
+    for (
+        let i = 0;
+        i < columns;
+        i++
+    ) {
+
+        drops[i] =
+            Math.random() * -50;
+    }
+}
+
+
+resizeCanvas();
+
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+
+/* =========================================================
+   MATRIX RAIN
+========================================================= */
+
+function drawMatrix() {
+
+    ctx.fillStyle =
+        "rgba(0,0,0,0.075)";
+
+
+    ctx.fillRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    ctx.font =
+        fontSize +
+        "px Courier New";
+
+
+    for (
+        let i = 0;
+        i < drops.length;
+        i++
+    ) {
+
+        const character =
+
+            matrixCharacters[
+                Math.floor(
+                    Math.random() *
+                    matrixCharacters.length
+                )
+            ];
+
+
+        const brightness =
+            Math.random();
+
+
+        if (
+            brightness > .94
+        ) {
+
+            ctx.fillStyle =
+                "#ffffff";
+
+        }
+
+        else if (
+            brightness > .75
+        ) {
+
+            ctx.fillStyle =
+                "#66ff88";
+
+        }
+
+        else {
+
+            ctx.fillStyle =
+                "#00ff41";
+        }
+
+
+        ctx.fillText(
+
+            character,
+
+            i * fontSize,
+
+            drops[i] * fontSize
+        );
+
+
+        if (
+
+            drops[i] * fontSize >
+            height
+
+            &&
+
+            Math.random() > .975
+
+        ) {
+
+            drops[i] = 0;
+        }
+
+
+        drops[i] += .45;
+    }
+
+
+    requestAnimationFrame(
+        drawMatrix
+    );
+}
+
+
+drawMatrix();
+
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const name =
+    document.getElementById("name");
+
+const message =
+    document.getElementById("message");
+
+const credit =
+    document.getElementById("credit");
+
+const instruction =
+    document.getElementById(
+        "instruction"
+    );
+
+const flash =
+    document.getElementById("flash");
+
+
+
+/* =========================================================
+   SCRAMBLE CHARACTERS
+========================================================= */
+
+const glitchCharacters =
+
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+
+"0123456789" +
+
+"@#$%&*<>[]{}" +
+
+"アカサタナハマヤラ";
+
+
+
+/* =========================================================
+   SCRAMBLE NORMAL TEXT
+========================================================= */
+
+function scrambleText(
+    target,
+    progress
+) {
+
+    let output = "";
+
+
+    for (
+        let i = 0;
+        i < target.length;
+        i++
+    ) {
+
+        const character =
+            target[i];
+
+
+        /*
+            Keep spaces and punctuation.
+        */
+
+        if (
+            character === " " ||
+            character === "-" ||
+            character === "/" ||
+            character === ";"
+        ) {
+
+            output += character;
+
+            continue;
+        }
+
+
+        const characterProgress =
+
+            progress *
+            target.length
+            -
+            i;
+
+
+        if (
+            characterProgress >= 1
+        ) {
+
+            output += character;
+
+        }
+
+        else {
+
+            output +=
+
+                glitchCharacters[
+                    Math.floor(
+                        Math.random() *
+                        glitchCharacters.length
+                    )
+                ];
+        }
+    }
+
+
+    return output;
+}
+
+
+
+/* =========================================================
+   SCRAMBLE HTML
+========================================================= */
+
+function scrambleTextHTML(
+    target,
+    progress
+) {
+
+    let output = "";
+
+
+    for (
+        let i = 0;
+        i < target.length;
+        i++
+    ) {
+
+        const character =
+            target[i];
+
+
+        if (
+            character === "\n"
+        ) {
+
+            output += "<br>";
+
+            continue;
+        }
+
+
+        if (
+            character === " "
+        ) {
+
+            output += "&nbsp;";
+
+            continue;
+        }
+
+
+        if (
+            character === "-" ||
+            character === "!" ||
+            character === ";"
+        ) {
+
+            output += character;
+
+            continue;
+        }
+
+
+        const characterProgress =
+
+            progress *
+            target.length
+            -
+            i;
+
+
+        if (
+            characterProgress >= 1
+        ) {
+
+            output += character;
+
+        }
+
+        else {
+
+            output +=
+
+                glitchCharacters[
+                    Math.floor(
+                        Math.random() *
+                        glitchCharacters.length
+                    )
+                ];
+        }
+    }
+
+
+    return output;
+}
+
+
+
+/* =========================================================
+   SCROLL
+========================================================= */
+
+window.addEventListener(
+    "scroll",
+    updateScroll,
+    { passive: true }
+);
+
+
+function updateScroll() {
+
+
+    const documentHeight =
+        document.documentElement.scrollHeight;
+
+
+    const windowHeight =
+        window.innerHeight;
+
+
+    const maxScroll =
+        documentHeight -
+        windowHeight;
+
+
+    const scrollY =
+        window.scrollY;
+
+
+    let p =
+
+        maxScroll > 0
+        ?
+        scrollY / maxScroll
+        :
+        0;
+
+
+    p =
+
+        Math.max(
+            0,
+            Math.min(
+                1,
+                p
+            )
+        );
+
+
+    /*
+        =====================================================
+        IMPORTANT:
+        Detect the REAL bottom of the page.
+
+        This makes the final message appear even if
+        the browser never reports exactly 100%.
+        =====================================================
+    */
+
+    const distanceFromBottom =
+
+        documentHeight -
+        (
+            scrollY +
+            windowHeight
+        );
+
+
+    const atBottom =
+
+        distanceFromBottom <= 20;
+
+
+
+    /* =====================================================
+       ALEX
+       8% → 38%
+    ===================================================== */
+
+    if (
+        p < .08
+    ) {
+
+        name.style.opacity = 0;
+
+    }
+
+
+    else if (
+        p < .38
+    ) {
+
+        const progress =
+
+            (p - .08) /
+            .30;
+
+
+        name.style.opacity =
+            progress;
+
+
+        name.style.transform =
+
+            `translate(-50%, -50%)
+             scale(${.75 +
+                    progress * .25})`;
+
+
+        name.textContent =
+
+            scrambleText(
+                "ALEX",
+                progress
+            );
+
+
+        name.classList.add(
+            "glitch"
+        );
+
+    }
+
+
+    else if (
+        p < .65
+    ) {
+
+        name.style.opacity = 1;
+
+        name.style.transform =
+
+            "translate(-50%, -50%) scale(1)";
+
+        name.textContent =
+            "ALEX";
+
+        name.classList.remove(
+            "glitch"
+        );
+
+    }
+
+
+    else if (
+        p < .72
+    ) {
+
+        const fade =
+
+            1 -
+            (
+                (p - .65) /
+                .07
+            );
+
+
+        name.style.opacity =
+            Math.max(
+                0,
+                fade
+            );
+
+        name.classList.remove(
+            "glitch"
+        );
+
+    }
+
+
+    else {
+
+        name.style.opacity = 0;
+
+        name.classList.remove(
+            "glitch"
+        );
+    }
+
+
+
+    /* =====================================================
+       ANNIVERSARY MESSAGE
+       72% → 88%
+    ===================================================== */
+
+    if (
+        p >= .72 &&
+        p < .88
+    ) {
+
+        const progress =
+
+            (p - .72) /
+            .16;
+
+
+        message.style.opacity =
+            progress;
+
+
+        message.style.transform =
+
+            `translate(-50%, -50%)
+             scale(${.90 +
+                    progress * .10})`;
+
+
+        message.innerHTML =
+
+            scrambleTextHTML(
+
+                "You're the ONE;\n" +
+                "Happy Work-Anniversary!",
+
+                progress
+            );
+
+
+        message.classList.add(
+            "glitch"
+        );
+
+    }
+
+
+    else if (
+        p >= .88 &&
+        p < .92
+    ) {
+
+        message.style.opacity = 1;
+
+        message.style.transform =
+
+            "translate(-50%, -50%) scale(1)";
+
+        message.innerHTML =
+
+            "You're the ONE;<br>" +
+            "Happy Work-Anniversary!";
+
+        message.classList.remove(
+            "glitch"
+        );
+
+    }
+
+
+    else if (
+        p >= .92 &&
+        !atBottom
+    ) {
+
+        /*
+            Fade anniversary message
+            before final credit.
+        */
+
+        const fade =
+
+            Math.max(
+                0,
+                1 -
+                (
+                    (p - .92) /
+                    .03
+                )
+            );
+
+
+        message.style.opacity =
+            fade;
+
+        message.classList.remove(
+            "glitch"
+        );
+
+    }
+
+
+    /*
+        If we are at the bottom,
+        anniversary message is OFF.
+    */
+
+    if (
+        atBottom
+    ) {
+
+        message.style.opacity = 0;
+
+    }
+
+
+
+    /* =====================================================
+       FINAL CREDIT
+       
+       IMPORTANT:
+       Instead of relying only on percentage,
+       use the actual distance from the bottom.
+       
+       Last 500px = decoding zone.
+    ===================================================== */
+
+    const finalZone =
+        500;
+
+
+    let creditProgress =
+
+        1 -
+        (
+            distanceFromBottom /
+            finalZone
+        );
+
+
+    creditProgress =
+
+        Math.max(
+            0,
+            Math.min(
+                1,
+                creditProgress
+            )
+        );
+
+
+    /*
+        Only show final credit
+        during the final 500px.
+    */
+
+    if (
+        distanceFromBottom <= finalZone
+    ) {
+
+        name.style.opacity = 0;
+
+        message.style.opacity = 0;
+
+
+        credit.style.opacity = 1;
+
+
+        const scale =
+
+            .75 +
+            creditProgress * .25;
+
+
+        credit.style.transform =
+
+            `translate(-50%, -50%)
+             scale(${scale})`;
+
+
+        /*
+            MATRIX DECODING
+        */
+
+        if (
+            creditProgress < 1
+        ) {
+
+            credit.textContent =
+
+                scrambleText(
+
+                    "In Courtesy of Land/FX",
+
+                    creditProgress
+                );
+
+
+            credit.classList.add(
+                "glitch"
+            );
+
+        }
+
+        else {
+
+            /*
+                At the actual bottom,
+                FORCE the complete text.
+            */
+
+            credit.textContent =
+                "In Courtesy of Land/FX";
+
+
+            credit.classList.remove(
+                "glitch"
+            );
+        }
+
+    }
+
+    else {
+
+        credit.style.opacity = 0;
+
+        credit.classList.remove(
+            "glitch"
+        );
+    }
+
+
+
+    /* =====================================================
+       INSTRUCTION
+    ===================================================== */
+
+    if (
+        p < .08
+    ) {
+
+        instruction.style.opacity = 1;
+
+    }
+
+    else {
+
+        instruction.style.opacity = 0;
+    }
+
+
+
+    /* =====================================================
+       FINAL FLASH
+    ===================================================== */
+
+    if (
+        atBottom
+    ) {
+
+        flash.style.opacity = .03;
+
+    }
+
+    else {
+
+        flash.style.opacity = 0;
+    }
+
+}
+
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+updateScroll();
+
+
+/*
+    Run again after the page has
+    completely loaded.
+
+    This helps browsers that need
+    a moment to calculate the
+    document height.
+*/
+
+window.addEventListener(
+    "load",
+    function() {
+
+        setTimeout(
+            updateScroll,
+            100
+        );
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>
+```
