@@ -12,7 +12,7 @@
 <style>
 
 /* =========================================================
-   PAGE / SCROLL LENGTH
+   PAGE
 ========================================================= */
 
 * {
@@ -32,15 +32,15 @@ body {
     font-family: "Courier New", monospace;
 
     /*
-        CHANGE THIS NUMBER TO CONTROL
-        HOW LONG THE PAGE IS.
+        TOTAL PAGE LENGTH
 
-        500vh  = shorter
-        1000vh = long
-        1500vh = very long
+        Increase this number if you want
+        even more scrolling.
+
+        1000vh = 10 screen heights
     */
 
-    height: 700vh;
+    height: 1000vh;
 
     overflow-x: hidden;
 }
@@ -52,6 +52,7 @@ body {
 
 #matrix {
     position: fixed;
+
     inset: 0;
 
     width: 100%;
@@ -69,6 +70,7 @@ body {
 
 .overlay {
     position: fixed;
+
     inset: 0;
 
     z-index: 2;
@@ -143,7 +145,7 @@ body {
 
 
 /* =========================================================
-   FINAL ANNIVERSARY MESSAGE
+   ANNIVERSARY MESSAGE
 ========================================================= */
 
 #message {
@@ -205,12 +207,77 @@ body {
 
 
 /* =========================================================
+   FINAL CREDIT
+========================================================= */
+
+#credit {
+
+    position: fixed;
+
+    z-index: 7;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%)
+        scale(.90);
+
+    width: 90%;
+
+    text-align: center;
+
+    font-family: "Courier New", monospace;
+
+    /*
+        Smaller than the main message
+    */
+
+    font-size:
+        clamp(
+            18px,
+            3vw,
+            48px
+        );
+
+    font-weight: normal;
+
+    line-height: 1.4;
+
+    letter-spacing: .08em;
+
+    color: #00ff41;
+
+    text-shadow:
+
+        0 0 5px #00ff41,
+
+        0 0 15px #00ff41,
+
+        0 0 30px rgba(0,255,65,.7);
+
+    opacity: 0;
+
+    white-space: normal;
+
+    pointer-events: none;
+
+    transition:
+
+        opacity .15s linear,
+
+        transform .15s linear;
+}
+
+
+/* =========================================================
    GLITCH
 ========================================================= */
 
 .glitch {
     animation: glitch .12s infinite;
 }
+
 
 @keyframes glitch {
 
@@ -259,16 +326,17 @@ body {
 
 
 /* =========================================================
-   SCROLL INSTRUCTION
+   INSTRUCTION
 ========================================================= */
 
 #instruction {
 
     position: fixed;
 
-    z-index: 7;
+    z-index: 8;
 
     left: 50%;
+
     bottom: 8%;
 
     transform:
@@ -284,867 +352,4 @@ body {
     text-align: center;
 
     text-shadow:
-        0 0 10px #00ff41;
-
-    transition:
-        opacity .5s ease;
-
-    white-space: nowrap;
-}
-
-
-/* =========================================================
-   SCANLINES
-========================================================= */
-
-.scanlines {
-
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 10;
-
-    pointer-events: none;
-
-    background:
-
-        repeating-linear-gradient(
-
-            to bottom,
-
-            rgba(255,255,255,.025)
-            0px,
-
-            rgba(255,255,255,.025)
-            1px,
-
-            transparent
-            2px,
-
-            transparent
-            4px
-        );
-
-    mix-blend-mode: screen;
-}
-
-
-/* =========================================================
-   SCREEN GLOW
-========================================================= */
-
-.screenGlow {
-
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 9;
-
-    pointer-events: none;
-
-    box-shadow:
-
-        inset
-        0 0 100px
-        rgba(0,255,65,.12);
-}
-
-
-/* =========================================================
-   FLASH
-========================================================= */
-
-#flash {
-
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 8;
-
-    background: #00ff41;
-
-    opacity: 0;
-
-    pointer-events: none;
-
-    transition:
-        opacity .1s linear;
-}
-
-</style>
-
-</head>
-
-
-<body>
-
-
-<!-- =====================================================
-     MATRIX BACKGROUND
-===================================================== -->
-
-<canvas id="matrix"></canvas>
-
-<div class="overlay"></div>
-
-
-<!-- =====================================================
-     ALEX
-===================================================== -->
-
-<div id="name">ALEX</div>
-
-
-<!-- =====================================================
-     FINAL MESSAGE
-===================================================== -->
-
-<div id="message">
-    You're the ONE;<br>
-    Happy Work-Anniversary!<br>
-   In Courtesy of Land/FX
-</div>
-
-
-<!-- =====================================================
-     INSTRUCTION
-===================================================== -->
-
-<div id="instruction">
-    SCROLL TO DECODE
-</div>
-
-
-<div id="flash"></div>
-
-<div class="scanlines"></div>
-
-<div class="screenGlow"></div>
-
-
-<script>
-
-/* =========================================================
-   MATRIX ENGINE
-========================================================= */
-
-const canvas =
-    document.getElementById("matrix");
-
-const ctx =
-    canvas.getContext("2d");
-
-let width;
-let height;
-
-let fontSize = 18;
-
-let columns;
-
-let drops = [];
-
-
-/* Matrix characters */
-
-const matrixCharacters =
-
-"アァカサタナハマヤラワ0123456789" +
-"ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-"#$%&*@";
-
-
-/* =========================================================
-   RESIZE
-========================================================= */
-
-function resizeCanvas() {
-
-    width =
-        canvas.width =
-        window.innerWidth;
-
-    height =
-        canvas.height =
-        window.innerHeight;
-
-    columns =
-        Math.floor(
-            width / fontSize
-        );
-
-    drops = [];
-
-    for (
-        let i = 0;
-        i < columns;
-        i++
-    ) {
-
-        drops[i] =
-            Math.random() * -50;
-    }
-}
-
-resizeCanvas();
-
-window.addEventListener(
-    "resize",
-    resizeCanvas
-);
-
-
-/* =========================================================
-   MATRIX RAIN
-========================================================= */
-
-function drawMatrix() {
-
-    ctx.fillStyle =
-        "rgba(0,0,0,0.075)";
-
-    ctx.fillRect(
-        0,
-        0,
-        width,
-        height
-    );
-
-    ctx.font =
-        fontSize +
-        "px Courier New";
-
-
-    for (
-        let i = 0;
-        i < drops.length;
-        i++
-    ) {
-
-        const character =
-
-            matrixCharacters[
-                Math.floor(
-                    Math.random() *
-                    matrixCharacters.length
-                )
-            ];
-
-
-        const brightness =
-            Math.random();
-
-
-        if (
-            brightness > .94
-        ) {
-
-            ctx.fillStyle =
-                "#ffffff";
-
-        }
-
-        else if (
-            brightness > .75
-        ) {
-
-            ctx.fillStyle =
-                "#66ff88";
-
-        }
-
-        else {
-
-            ctx.fillStyle =
-                "#00ff41";
-        }
-
-
-        ctx.fillText(
-
-            character,
-
-            i * fontSize,
-
-            drops[i] *
-            fontSize
-        );
-
-
-        if (
-
-            drops[i] *
-            fontSize >
-            height
-
-            &&
-
-            Math.random() > .975
-
-        ) {
-
-            drops[i] = 0;
-        }
-
-
-        drops[i] += .45;
-    }
-
-
-    requestAnimationFrame(
-        drawMatrix
-    );
-}
-
-drawMatrix();
-
-
-
-/* =========================================================
-   ELEMENTS
-========================================================= */
-
-const name =
-    document.getElementById("name");
-
-const message =
-    document.getElementById("message");
-
-const instruction =
-    document.getElementById(
-        "instruction"
-    );
-
-const flash =
-    document.getElementById("flash");
-
-
-/* =========================================================
-   SCRAMBLE CHARACTERS
-========================================================= */
-
-const glitchCharacters =
-
-"ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-"0123456789" +
-"@#$%&*<>[]{}" +
-"アカサタナハマヤラ";
-
-
-/* =========================================================
-   SCRAMBLE TEXT
-========================================================= */
-
-function scrambleText(
-    target,
-    progress
-) {
-
-    let output = "";
-
-
-    for (
-        let i = 0;
-        i < target.length;
-        i++
-    ) {
-
-        const character =
-            target[i];
-
-
-        /*
-            Keep spaces and punctuation.
-        */
-
-        if (
-            character === " " ||
-            character === "\n" ||
-            character === "-" ||
-            character === ";"
-        ) {
-
-            output +=
-                character;
-
-            continue;
-        }
-
-
-        /*
-            Each character gets
-            its own decoding point.
-        */
-
-        const characterProgress =
-
-            progress *
-            target.length
-            -
-            i;
-
-
-        if (
-            characterProgress >= 1
-        ) {
-
-            output +=
-                character;
-
-        }
-
-        else {
-
-            output +=
-
-                glitchCharacters[
-                    Math.floor(
-                        Math.random() *
-                        glitchCharacters.length
-                    )
-                ];
-        }
-    }
-
-
-    return output;
-}
-
-
-
-/* =========================================================
-   FINAL MESSAGE HTML SCRAMBLE
-========================================================= */
-
-function scrambleTextHTML(
-    target,
-    progress
-) {
-
-    let output = "";
-
-
-    for (
-        let i = 0;
-        i < target.length;
-        i++
-    ) {
-
-        const character =
-            target[i];
-
-
-        if (
-            character === "\n"
-        ) {
-
-            output += "<br>";
-
-            continue;
-        }
-
-
-        if (
-            character === " "
-        ) {
-
-            output += "&nbsp;";
-
-            continue;
-        }
-
-
-        if (
-            character === "-" ||
-            character === "!" ||
-            character === ";"
-        ) {
-
-            output +=
-                character;
-
-            continue;
-        }
-
-
-        const characterProgress =
-
-            progress *
-            target.length
-            -
-            i;
-
-
-        if (
-            characterProgress >= 1
-        ) {
-
-            output +=
-                character;
-
-        }
-
-        else {
-
-            output +=
-
-                glitchCharacters[
-                    Math.floor(
-                        Math.random() *
-                        glitchCharacters.length
-                    )
-                ];
-        }
-    }
-
-
-    return output;
-}
-
-
-
-/* =========================================================
-   SCROLL HANDLER
-========================================================= */
-
-window.addEventListener(
-    "scroll",
-    updateScroll
-);
-
-
-function updateScroll() {
-
-
-    const maxScroll =
-
-        document.documentElement
-        .scrollHeight
-        -
-        window.innerHeight;
-
-
-    let scrollProgress =
-
-        window.scrollY /
-        maxScroll;
-
-
-    scrollProgress =
-
-        Math.max(
-            0,
-            Math.min(
-                1,
-                scrollProgress
-            )
-        );
-
-
-
-    /* =====================================================
-       ALEX — DELAYED REVEAL
-    ===================================================== */
-
-    /*
-        ALEX DOES NOT START HERE UNTIL
-        THE USER HAS SCROLLED 25%.
-
-        Before:
-
-        0% ---------------- 25%
-        Matrix only
-
-        Then:
-
-        25% ---------------- 55%
-        ALEX slowly decodes
-    */
-
-
-    const alexProgress =
-
-        Math.max(
-            0,
-            Math.min(
-                1,
-
-                (scrollProgress - .25)
-                /
-                .30
-            )
-        );
-
-
-    /*
-        Fade ALEX in gradually.
-    */
-
-    name.style.opacity =
-        alexProgress;
-
-
-    /*
-        Start smaller and grow.
-    */
-
-    const alexScale =
-
-        .70 +
-        alexProgress * .30;
-
-
-    name.style.transform =
-
-        `translate(-50%, -50%)
-         scale(${alexScale})`;
-
-
-    /*
-        Scramble ALEX.
-    */
-
-    name.textContent =
-
-        scrambleText(
-            "ALEX",
-            alexProgress
-        );
-
-
-    /*
-        Glitch while decoding.
-    */
-
-    if (
-
-        alexProgress > 0 &&
-        alexProgress < 1
-
-    ) {
-
-        name.classList.add(
-            "glitch"
-        );
-
-    }
-
-    else {
-
-        name.classList.remove(
-            "glitch"
-        );
-    }
-
-
-
-    /* =====================================================
-       ALEX REMAINS VISIBLE FOR A WHILE
-    ===================================================== */
-
-    /*
-        Keep ALEX visible from 55%
-        until around 68%.
-    */
-
-    if (
-
-        scrollProgress >= .55 &&
-        scrollProgress < .68
-
-    ) {
-
-        name.style.opacity = 1;
-
-        name.textContent = "ALEX";
-
-        name.classList.remove(
-            "glitch"
-        );
-    }
-
-
-    /*
-        Slowly fade ALEX away
-        after 68%.
-    */
-
-    if (
-        scrollProgress >= .68
-    ) {
-
-        const fadeOut =
-
-            1 -
-            (
-                (scrollProgress - .68)
-                /
-                .10
-            );
-
-
-        name.style.opacity =
-
-            Math.max(
-                0,
-                fadeOut
-            );
-    }
-
-
-
-    /* =====================================================
-       FINAL MESSAGE — VERY LATE
-    ===================================================== */
-
-    /*
-        The anniversary message does
-        NOT start until 78%.
-
-        It finishes around 97%.
-    */
-
-    const messageProgress =
-
-        Math.max(
-            0,
-            Math.min(
-                1,
-
-                (scrollProgress - .78)
-                /
-                .19
-            )
-        );
-
-
-    message.style.opacity =
-        messageProgress;
-
-
-    const messageScale =
-
-        .90 +
-        messageProgress * .10;
-
-
-    message.style.transform =
-
-        `translate(-50%, -50%)
-         scale(${messageScale})`;
-
-
-    /*
-        Decode the final message.
-    */
-
-    message.innerHTML =
-
-        scrambleTextHTML(
-
-            "You're the ONE;\n" +
-            "Happy Work-Anniversary!",
-
-            messageProgress
-        );
-
-
-    /*
-        Glitch while decoding.
-    */
-
-    if (
-
-        messageProgress > 0 &&
-        messageProgress < 1
-
-    ) {
-
-        message.classList.add(
-            "glitch"
-        );
-
-    }
-
-    else {
-
-        message.classList.remove(
-            "glitch"
-        );
-    }
-
-
-
-    /* =====================================================
-       INSTRUCTION
-    ===================================================== */
-
-    if (
-        scrollProgress < .15
-    ) {
-
-        instruction.style.opacity =
-            1;
-
-    }
-
-    else {
-
-        instruction.style.opacity =
-
-            Math.max(
-                0,
-                1 -
-                scrollProgress * 5
-            );
-    }
-
-
-
-    /* =====================================================
-       FINAL FLASH
-    ===================================================== */
-
-    if (
-        scrollProgress > .98
-    ) {
-
-        const flashAmount =
-
-            (
-                scrollProgress -
-                .98
-            ) * 10;
-
-
-        flash.style.opacity =
-
-            Math.min(
-                .08,
-                flashAmount
-            );
-
-    }
-
-    else {
-
-        flash.style.opacity = 0;
-    }
-
-}
-
-
-/* =========================================================
-   INITIAL STATE
-========================================================= */
-
-updateScroll();
-
-</script>
-
-</body>
-
-</html>
-```
+       
