@@ -1,508 +1,456 @@
 ```html
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Matrix Name Decoder</title>
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>ALEX — The ONE</title>
+
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
 
-    html, body {
-        background: #000;
-        color: #00ff41;
-        font-family: "Courier New", monospace;
-        overflow-x: hidden;
-    }
+/* =========================================================
+   BASIC PAGE
+========================================================= */
 
-    /* Tall page gives us room to scroll */
-    body {
-        height: 400vh;
-    }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    /* Matrix canvas stays fixed */
-    #matrix {
-        position: fixed;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-        background: #000;
-    }
+html {
+    background: #000;
+}
 
-    /* Dark overlay helps the name stand out */
-    .overlay {
-        position: fixed;
-        inset: 0;
-        z-index: 2;
-        pointer-events: none;
-        background:
-            radial-gradient(
-                circle at center,
-                rgba(0, 255, 65, 0.05),
-                rgba(0, 0, 0, 0.65)
-            );
-    }
+body {
 
-    /* Center name */
-    #name {
-        position: fixed;
-        z-index: 5;
+    background: #000;
 
-        left: 50%;
-        top: 50%;
+    color: #00ff41;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    /*
+        Tall page gives us scrolling space.
+    */
+
+    height: 500vh;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   MATRIX CANVAS
+========================================================= */
+
+#matrix {
+
+    position: fixed;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 1;
+
+    background: #000;
+}
+
+
+/* =========================================================
+   DARK OVERLAY
+========================================================= */
+
+.overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 2;
+
+    pointer-events: none;
+
+    background:
+
+        radial-gradient(
+            circle at center,
+
+            rgba(0,255,65,.06),
+
+            rgba(0,0,0,.72)
+        );
+}
+
+
+/* =========================================================
+   ALEX
+========================================================= */
+
+#name {
+
+    position: fixed;
+
+    z-index: 5;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%)
+        scale(.75);
+
+    width: 100%;
+
+    text-align: center;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size:
+        clamp(
+            70px,
+            17vw,
+            250px
+        );
+
+    font-weight: bold;
+
+    letter-spacing: .10em;
+
+    color: #00ff41;
+
+    text-shadow:
+
+        0 0 5px #00ff41,
+
+        0 0 15px #00ff41,
+
+        0 0 35px #00ff41,
+
+        0 0 70px rgba(0,255,65,.7);
+
+    opacity: 0;
+
+    white-space: nowrap;
+
+    transition:
+
+        opacity .12s linear,
+
+        transform .12s linear;
+}
+
+
+/* =========================================================
+   ANNIVERSARY MESSAGE
+========================================================= */
+
+#message {
+
+    position: fixed;
+
+    z-index: 6;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%)
+        scale(.90);
+
+    width: 90%;
+
+    text-align: center;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    /*
+        Responsive size.
+    */
+
+    font-size:
+        clamp(
+            24px,
+            4.5vw,
+            72px
+        );
+
+    font-weight: bold;
+
+    line-height: 1.35;
+
+    letter-spacing: .04em;
+
+    color: #00ff41;
+
+    text-shadow:
+
+        0 0 5px #00ff41,
+
+        0 0 15px #00ff41,
+
+        0 0 30px #00ff41,
+
+        0 0 60px rgba(0,255,65,.7);
+
+    opacity: 0;
+
+    white-space: normal;
+
+    pointer-events: none;
+
+    transition:
+
+        opacity .15s linear,
+
+        transform .15s linear;
+}
+
+
+/* =========================================================
+   GLITCH EFFECT
+========================================================= */
+
+.glitch {
+
+    animation:
+        glitch .12s infinite;
+}
+
+
+@keyframes glitch {
+
+    0% {
 
         transform:
             translate(-50%, -50%)
-            scale(0.85);
-
-        font-family: "Courier New", monospace;
-        font-size: clamp(70px, 16vw, 240px);
-        font-weight: bold;
-        letter-spacing: 0.08em;
-
-        color: #00ff41;
-
-        text-shadow:
-            0 0 5px #00ff41,
-            0 0 15px #00ff41,
-            0 0 35px rgba(0,255,65,.8),
-            0 0 70px rgba(0,255,65,.5);
-
-        opacity: 0;
-
-        white-space: nowrap;
-
-        transition:
-            opacity 0.15s linear,
-            transform 0.15s linear;
+            translate(0,0)
+            scale(1);
     }
 
-    /* Glitch layers */
-    #name::before,
-    #name::after {
-        content: "ALEX";
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
+    20% {
 
-        overflow: hidden;
-
-        opacity: 0;
+        transform:
+            translate(-50%, -50%)
+            translate(-4px,2px)
+            scale(1.01);
     }
 
-    #name::before {
-        color: #00ffff;
-        transform: translate(3px, -2px);
+    40% {
+
+        transform:
+            translate(-50%, -50%)
+            translate(4px,-2px)
+            scale(.99);
     }
 
-    #name::after {
-        color: #ff003c;
-        transform: translate(-3px, 2px);
+    60% {
+
+        transform:
+            translate(-50%, -50%)
+            translate(-2px,-1px)
+            scale(1.01);
     }
 
-    .glitch {
-        animation: glitch 0.15s infinite;
+    80% {
+
+        transform:
+            translate(-50%, -50%)
+            translate(3px,2px)
+            scale(.99);
     }
 
-    @keyframes glitch {
-        0% {
-            transform:
-                translate(-50%, -50%)
-                translate(0,0)
-                scale(1);
-        }
+    100% {
 
-        25% {
-            transform:
-                translate(-50%, -50%)
-                translate(-4px,2px)
-                scale(1.01);
-        }
-
-        50% {
-            transform:
-                translate(-50%, -50%)
-                translate(4px,-2px)
-                scale(.99);
-        }
-
-        75% {
-            transform:
-                translate(-50%, -50%)
-                translate(-2px,-1px)
-                scale(1.01);
-        }
-
-        100% {
-            transform:
-                translate(-50%, -50%)
-                translate(0,0)
-                scale(1);
-        }
+        transform:
+            translate(-50%, -50%)
+            translate(0,0)
+            scale(1);
     }
+}
 
-    /* Intro text */
-    #instruction {
-        position: fixed;
-        z-index: 6;
 
-        left: 50%;
-        bottom: 8%;
+/* =========================================================
+   SCROLL INSTRUCTION
+========================================================= */
 
-        transform: translateX(-50%);
+#instruction {
 
-        color: rgba(0,255,65,.8);
+    position: fixed;
 
-        font-size: 14px;
-        letter-spacing: 4px;
+    z-index: 7;
 
-        text-align: center;
+    left: 50%;
 
-        text-shadow:
-            0 0 10px #00ff41;
+    bottom: 8%;
 
-        transition: opacity .5s ease;
-    }
+    transform:
+        translateX(-50%);
 
-    /* Scanline effect */
-    .scanlines {
-        position: fixed;
-        inset: 0;
-        z-index: 10;
+    color:
+        rgba(0,255,65,.85);
 
-        pointer-events: none;
+    font-size: 14px;
 
-        background:
-            repeating-linear-gradient(
-                to bottom,
-                rgba(255,255,255,0.025) 0px,
-                rgba(255,255,255,0.025) 1px,
-                transparent 2px,
-                transparent 4px
-            );
+    letter-spacing: 4px;
 
-        mix-blend-mode: screen;
-    }
+    text-align: center;
 
-    /* Slight green glow around entire screen */
-    .screenGlow {
-        position: fixed;
-        inset: 0;
-        z-index: 9;
+    text-shadow:
+        0 0 10px #00ff41;
 
-        pointer-events: none;
+    transition:
+        opacity .5s ease;
 
-        box-shadow:
-            inset 0 0 100px rgba(0,255,65,.12);
-    }
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   SCANLINES
+========================================================= */
+
+.scanlines {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 10;
+
+    pointer-events: none;
+
+    background:
+
+        repeating-linear-gradient(
+
+            to bottom,
+
+            rgba(255,255,255,.025)
+            0px,
+
+            rgba(255,255,255,.025)
+            1px,
+
+            transparent
+            2px,
+
+            transparent
+            4px
+        );
+
+    mix-blend-mode: screen;
+}
+
+
+/* =========================================================
+   SCREEN GLOW
+========================================================= */
+
+.screenGlow {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9;
+
+    pointer-events: none;
+
+    box-shadow:
+
+        inset
+        0 0 100px
+        rgba(0,255,65,.12);
+}
+
+
+/* =========================================================
+   BOTTOM FLASH
+========================================================= */
+
+#flash {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 8;
+
+    background: #00ff41;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity .1s linear;
+}
+
 </style>
+
 </head>
+
 
 <body>
 
+
+<!-- =====================================================
+     MATRIX BACKGROUND
+===================================================== -->
+
 <canvas id="matrix"></canvas>
+
 
 <div class="overlay"></div>
 
-<div id="name">ALEX</div>
+
+<!-- =====================================================
+     ALEX
+===================================================== -->
+
+<div id="name">
+    ALEX
+</div>
+
+
+<!-- =====================================================
+     FINAL MESSAGE
+===================================================== -->
+
+<div id="message">
+    You're the ONE;<br>
+    Happy Work-Anniversary!
+</div>
+
+
+<!-- =====================================================
+     INSTRUCTION
+===================================================== -->
 
 <div id="instruction">
     SCROLL TO DECODE
 </div>
 
-<div class="scanlines"></div>
-<div class="screenGlow"></div>
 
+<!-- =====================================================
+     EFFECTS
+===================================================== -->
 
-<script>
+<div id="flash"></div>
 
-/* =========================================================
-   MATRIX RAIN
-========================================================= */
-
-const canvas = document.getElementById("matrix");
-const ctx = canvas.getContext("2d");
-
-let width;
-let height;
-
-let fontSize = 18;
-let columns;
-let drops = [];
-
-const matrixCharacters =
-    "アァカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&*@";
-
-function resizeCanvas() {
-
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-
-    columns = Math.floor(width / fontSize);
-
-    drops = [];
-
-    for (let i = 0; i < columns; i++) {
-
-        drops[i] =
-            Math.random() * -50;
-    }
-}
-
-resizeCanvas();
-
-window.addEventListener("resize", resizeCanvas);
-
-
-/* =========================================================
-   DRAW MATRIX
-========================================================= */
-
-function drawMatrix() {
-
-    /*
-        Slight black transparency creates the
-        classic Matrix trailing effect.
-    */
-
-    ctx.fillStyle = "rgba(0,0,0,0.075)";
-    ctx.fillRect(0, 0, width, height);
-
-    ctx.font =
-        fontSize + "px Courier New";
-
-    for (let i = 0; i < drops.length; i++) {
-
-        const character =
-            matrixCharacters[
-                Math.floor(
-                    Math.random() *
-                    matrixCharacters.length
-                )
-            ];
-
-        /*
-            Random brightness
-        */
-
-        const brightness =
-            Math.random();
-
-        if (brightness > .94) {
-
-            ctx.fillStyle = "#ffffff";
-
-        } else if (brightness > .75) {
-
-            ctx.fillStyle = "#66ff88";
-
-        } else {
-
-            ctx.fillStyle = "#00ff41";
-        }
-
-        ctx.fillText(
-            character,
-            i * fontSize,
-            drops[i] * fontSize
-        );
-
-        /*
-            Reset individual streams
-        */
-
-        if (
-            drops[i] * fontSize > height &&
-            Math.random() > .975
-        ) {
-
-            drops[i] = 0;
-        }
-
-        drops[i] += 0.45;
-    }
-
-    requestAnimationFrame(drawMatrix);
-}
-
-drawMatrix();
-
-
-/* =========================================================
-   SCROLL DECODING
-========================================================= */
-
-const name = document.getElementById("name");
-const instruction =
-    document.getElementById("instruction");
-
-let scrollProgress = 0;
-
-
-/*
-    Characters that appear while decoding
-*/
-
-const glitchCharacters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*<>[]{}";
-
-
-/*
-    Change the displayed text while decoding
-*/
-
-function scrambleName(progress) {
-
-    const target = "ALEX";
-
-    let output = "";
-
-    for (let i = 0; i < target.length; i++) {
-
-        /*
-            Each letter has its own decoding point.
-        */
-
-        const letterProgress =
-            progress * target.length - i;
-
-        if (letterProgress >= 1) {
-
-            output += target[i];
-
-        } else {
-
-            output +=
-                glitchCharacters[
-                    Math.floor(
-                        Math.random() *
-                        glitchCharacters.length
-                    )
-                ];
-        }
-    }
-
-    name.textContent = output;
-}
-
-
-/* =========================================================
-   SCROLL EVENT
-========================================================= */
-
-window.addEventListener("scroll", () => {
-
-    const maxScroll =
-        document.documentElement.scrollHeight -
-        window.innerHeight;
-
-    scrollProgress =
-        window.scrollY / maxScroll;
-
-    /*
-        Clamp 0 - 1
-    */
-
-    scrollProgress =
-        Math.max(
-            0,
-            Math.min(1, scrollProgress)
-        );
-
-
-    /* ---------------------------------------------
-       NAME VISIBILITY
-    --------------------------------------------- */
-
-    /*
-        Name begins appearing around 15%
-    */
-
-    const nameOpacity =
-        Math.max(
-            0,
-            Math.min(
-                1,
-                (scrollProgress - .10) / .25
-            )
-        );
-
-    name.style.opacity =
-        nameOpacity;
-
-
-    /* ---------------------------------------------
-       NAME SCALE
-    --------------------------------------------- */
-
-    const scale =
-        .75 +
-        nameOpacity * .25;
-
-    name.style.transform =
-        `translate(-50%, -50%) scale(${scale})`;
-
-
-    /* ---------------------------------------------
-       SCRAMBLE
-    --------------------------------------------- */
-
-    scrambleName(scrollProgress);
-
-
-    /* ---------------------------------------------
-       GLITCH INTENSITY
-    --------------------------------------------- */
-
-    if (
-        scrollProgress > .15 &&
-        scrollProgress < .85
-    ) {
-
-        name.classList.add("glitch");
-
-    } else {
-
-        name.classList.remove("glitch");
-    }
-
-
-    /* ---------------------------------------------
-       INSTRUCTION
-    --------------------------------------------- */
-
-    if (scrollProgress < .08) {
-
-        instruction.style.opacity = 1;
-
-    } else {
-
-        instruction.style.opacity =
-            Math.max(
-                0,
-                1 - scrollProgress * 3
-            );
-    }
-});
-
-
-/* =========================================================
-   INITIAL STATE
-========================================================= */
-
-scrambleName(0);
-
-</script>
-
-</body>
-</html>
-```
+<div class="scanlines"></
