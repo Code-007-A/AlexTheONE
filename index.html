@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -38,7 +39,8 @@ body {
         monospace;
 
     /*
-        Tall page gives us scrolling space.
+        Increase this number if you want
+        more scrolling distance.
     */
 
     height: 1000vh;
@@ -177,10 +179,6 @@ body {
         "Courier New",
         monospace;
 
-    /*
-        Responsive size.
-    */
-
     font-size:
         clamp(
             24px,
@@ -217,6 +215,70 @@ body {
         opacity .15s linear,
 
         transform .15s linear;
+}
+
+
+/* =========================================================
+   FINAL CREDIT
+========================================================= */
+
+#credit {
+
+    position: fixed;
+
+    z-index: 7;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%)
+        scale(.80);
+
+    width: 90%;
+
+    text-align: center;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size:
+        clamp(
+            18px,
+            3.2vw,
+            48px
+        );
+
+    font-weight: normal;
+
+    line-height: 1.4;
+
+    letter-spacing: .08em;
+
+    color: #00ff41;
+
+    text-shadow:
+
+        0 0 5px #00ff41,
+
+        0 0 15px #00ff41,
+
+        0 0 30px #00ff41,
+
+        0 0 60px rgba(0,255,65,.7);
+
+    opacity: 0;
+
+    white-space: nowrap;
+
+    pointer-events: none;
+
+    transition:
+
+        opacity .12s linear,
+
+        transform .12s linear;
 }
 
 
@@ -388,7 +450,7 @@ body {
 
     inset: 0;
 
-    z-index: 8;
+    z-index: 11;
 
     background: #00ff41;
 
@@ -414,7 +476,6 @@ body {
 
 <canvas id="matrix"></canvas>
 
-
 <div class="overlay"></div>
 
 
@@ -428,12 +489,21 @@ body {
 
 
 <!-- =====================================================
-     FINAL MESSAGE
+     ANNIVERSARY MESSAGE
 ===================================================== -->
 
 <div id="message">
     You're the ONE;<br>
     Happy Work-Anniversary!
+</div>
+
+
+<!-- =====================================================
+     FINAL CREDIT
+===================================================== -->
+
+<div id="credit">
+    In Courtesy of Land/FX
 </div>
 
 
@@ -673,6 +743,9 @@ const name =
 const message =
     document.getElementById("message");
 
+const credit =
+    document.getElementById("credit");
+
 const instruction =
     document.getElementById(
         "instruction"
@@ -780,308 +853,7 @@ function scrambleText(
 
 
 /* =========================================================
-   SCROLL
-========================================================= */
-
-window.addEventListener(
-    "scroll",
-    updateScroll
-);
-
-
-function updateScroll() {
-
-
-    /*
-        Calculate total scroll.
-    */
-
-    const maxScroll =
-
-        document.documentElement
-        .scrollHeight
-        -
-        window.innerHeight;
-
-
-    let scrollProgress =
-
-        window.scrollY /
-        maxScroll;
-
-
-    /*
-        Keep between 0 and 1.
-    */
-
-    scrollProgress =
-
-        Math.max(
-            0,
-            Math.min(
-                1,
-                scrollProgress
-            )
-        );
-
-
-
-    /* =====================================================
-       ALEX SECTION
-    ===================================================== */
-
-    /*
-        ALEX begins appearing
-        around 10% scroll.
-    */
-
-    const alexProgress =
-
-        Math.max(
-            0,
-            Math.min(
-                1,
-                (scrollProgress - .08) /
-                .30
-            )
-        );
-
-
-    /*
-        Fade ALEX in.
-    */
-
-    name.style.opacity =
-        alexProgress;
-
-
-    /*
-        Scale ALEX.
-    */
-
-    const alexScale =
-
-        .75 +
-        alexProgress * .25;
-
-
-    name.style.transform =
-
-        `translate(-50%, -50%)
-         scale(${alexScale})`;
-
-
-    /*
-        Scramble ALEX.
-    */
-
-    name.textContent =
-
-        scrambleText(
-            "ALEX",
-            alexProgress
-        );
-
-
-    /*
-        Glitch while decoding.
-    */
-
-    if (
-
-        alexProgress > 0 &&
-        alexProgress < 1
-
-    ) {
-
-        name.classList.add(
-            "glitch"
-        );
-
-    }
-
-    else {
-
-        name.classList.remove(
-            "glitch"
-        );
-    }
-
-
-
-    /* =====================================================
-       FINAL MESSAGE
-    ===================================================== */
-
-    /*
-        The final message begins
-        appearing during the last
-        ~25% of the page.
-    */
-
-    const messageProgress =
-
-        Math.max(
-            0,
-            Math.min(
-                1,
-                (scrollProgress - .72) /
-                .24
-            )
-        );
-
-
-    /*
-        Fade final message in.
-    */
-
-    message.style.opacity =
-        messageProgress;
-
-
-    /*
-        Scale final message.
-    */
-
-    const messageScale =
-
-        .90 +
-        messageProgress * .10;
-
-
-    message.style.transform =
-
-        `translate(-50%, -50%)
-         scale(${messageScale})`;
-
-
-    /*
-        Decode message.
-    */
-
-    message.innerHTML =
-
-        scrambleTextHTML(
-            "You're the ONE;\nHappy Work-Anniversary!",
-            messageProgress
-        );
-
-
-    /*
-        Glitch effect.
-    */
-
-    if (
-
-        messageProgress > 0 &&
-        messageProgress < 1
-
-    ) {
-
-        message.classList.add(
-            "glitch"
-        );
-
-    }
-
-    else {
-
-        message.classList.remove(
-            "glitch"
-        );
-    }
-
-
-
-    /* =====================================================
-       ALEX FADES AWAY
-    ===================================================== */
-
-    if (
-        scrollProgress > .65
-    ) {
-
-        const fadeOut =
-
-            Math.max(
-                0,
-                1 -
-                (scrollProgress - .65) /
-                .12
-            );
-
-
-        name.style.opacity =
-            fadeOut;
-    }
-
-
-
-    /* =====================================================
-       INSTRUCTION
-    ===================================================== */
-
-    if (
-        scrollProgress < .08
-    ) {
-
-        instruction.style.opacity =
-            1;
-
-    }
-
-    else {
-
-        instruction.style.opacity =
-
-            Math.max(
-                0,
-                1 -
-                scrollProgress * 4
-            );
-    }
-
-
-
-    /* =====================================================
-       FINAL FLASH
-    ===================================================== */
-
-    /*
-        Tiny flash when reaching
-        the very bottom.
-    */
-
-    if (
-        scrollProgress > .98
-    ) {
-
-        const flashAmount =
-
-            (scrollProgress - .98)
-            * 10;
-
-
-        flash.style.opacity =
-
-            Math.min(
-                .08,
-                flashAmount
-            );
-
-    }
-
-    else {
-
-        flash.style.opacity = 0;
-    }
-
-}
-
-
-
-/* =========================================================
-   HTML VERSION OF SCRAMBLE
+   HTML SCRAMBLE
 ========================================================= */
 
 function scrambleTextHTML(
@@ -1097,7 +869,6 @@ function scrambleTextHTML(
         i < target.length;
         i++
     ) {
-
 
         const character =
             target[i];
@@ -1192,6 +963,468 @@ function scrambleTextHTML(
 
 
 /* =========================================================
+   SCROLL
+========================================================= */
+
+window.addEventListener(
+    "scroll",
+    updateScroll,
+    { passive: true }
+);
+
+
+function updateScroll() {
+
+
+    /*
+        Calculate total scroll.
+    */
+
+    const maxScroll =
+
+        document.documentElement
+        .scrollHeight
+        -
+        window.innerHeight;
+
+
+    let scrollProgress =
+
+        window.scrollY /
+        maxScroll;
+
+
+    /*
+        Keep between 0 and 1.
+    */
+
+    scrollProgress =
+
+        Math.max(
+            0,
+            Math.min(
+                1,
+                scrollProgress
+            )
+        );
+
+
+
+    /* =====================================================
+       STAGE 1
+       MATRIX ONLY
+       0% → 8%
+    ===================================================== */
+
+    if (
+        scrollProgress < .08
+    ) {
+
+        name.style.opacity = 0;
+
+        message.style.opacity = 0;
+
+        credit.style.opacity = 0;
+    }
+
+
+
+    /* =====================================================
+       STAGE 2
+       ALEX DECODING
+       8% → 38%
+    ===================================================== */
+
+    if (
+        scrollProgress >= .08 &&
+        scrollProgress < .38
+    ) {
+
+        const alexProgress =
+
+            (scrollProgress - .08) /
+            .30;
+
+
+        name.style.opacity =
+            alexProgress;
+
+
+        const alexScale =
+
+            .75 +
+            alexProgress * .25;
+
+
+        name.style.transform =
+
+            `translate(-50%, -50%)
+             scale(${alexScale})`;
+
+
+        name.textContent =
+
+            scrambleText(
+                "ALEX",
+                alexProgress
+            );
+
+
+        name.classList.add(
+            "glitch"
+        );
+
+
+        message.style.opacity = 0;
+
+        credit.style.opacity = 0;
+    }
+
+
+
+    /* =====================================================
+       STAGE 3
+       ALEX HOLD
+       38% → 65%
+    ===================================================== */
+
+    if (
+        scrollProgress >= .38 &&
+        scrollProgress < .65
+    ) {
+
+        name.style.opacity = 1;
+
+        name.style.transform =
+
+            "translate(-50%, -50%) scale(1)";
+
+        name.textContent =
+            "ALEX";
+
+        name.classList.remove(
+            "glitch"
+        );
+
+
+        message.style.opacity = 0;
+
+        credit.style.opacity = 0;
+    }
+
+
+
+    /* =====================================================
+       STAGE 4
+       ALEX FADES OUT
+       65% → 72%
+    ===================================================== */
+
+    if (
+        scrollProgress >= .65 &&
+        scrollProgress < .72
+    ) {
+
+        const fadeOut =
+
+            1 -
+            (
+                (scrollProgress - .65) /
+                .07
+            );
+
+
+        name.style.opacity =
+            Math.max(
+                0,
+                fadeOut
+            );
+
+
+        name.classList.remove(
+            "glitch"
+        );
+
+
+        message.style.opacity = 0;
+
+        credit.style.opacity = 0;
+    }
+
+
+
+    /* =====================================================
+       STAGE 5
+       ANNIVERSARY MESSAGE DECODING
+       72% → 91%
+    ===================================================== */
+
+    if (
+        scrollProgress >= .72 &&
+        scrollProgress < .91
+    ) {
+
+        const messageProgress =
+
+            (scrollProgress - .72) /
+            .19;
+
+
+        name.style.opacity = 0;
+
+
+        message.style.opacity =
+            messageProgress;
+
+
+        const messageScale =
+
+            .90 +
+            messageProgress * .10;
+
+
+        message.style.transform =
+
+            `translate(-50%, -50%)
+             scale(${messageScale})`;
+
+
+        message.innerHTML =
+
+            scrambleTextHTML(
+
+                "You're the ONE;\n" +
+                "Happy Work-Anniversary!",
+
+                messageProgress
+            );
+
+
+        message.classList.add(
+            "glitch"
+        );
+
+
+        credit.style.opacity = 0;
+    }
+
+
+
+    /* =====================================================
+       STAGE 6
+       ANNIVERSARY MESSAGE HOLD
+       91% → 94%
+    ===================================================== */
+
+    if (
+        scrollProgress >= .91 &&
+        scrollProgress < .94
+    ) {
+
+        name.style.opacity = 0;
+
+        message.style.opacity = 1;
+
+        message.style.transform =
+
+            "translate(-50%, -50%) scale(1)";
+
+        message.innerHTML =
+
+            "You're the ONE;<br>" +
+            "Happy Work-Anniversary!";
+
+
+        message.classList.remove(
+            "glitch"
+        );
+
+
+        credit.style.opacity = 0;
+    }
+
+
+
+    /* =====================================================
+       STAGE 7
+       ANNIVERSARY FADES OUT
+       94% → 95%
+    ===================================================== */
+
+    if (
+        scrollProgress >= .94 &&
+        scrollProgress < .95
+    ) {
+
+        const fadeOut =
+
+            1 -
+            (
+                (scrollProgress - .94) /
+                .01
+            );
+
+
+        name.style.opacity = 0;
+
+        message.style.opacity =
+            Math.max(
+                0,
+                fadeOut
+            );
+
+        credit.style.opacity = 0;
+    }
+
+
+
+    /* =====================================================
+       STAGE 8
+       FINAL CREDIT DECODING
+       95% → 100%
+    ===================================================== */
+
+    if (
+        scrollProgress >= .95
+    ) {
+
+        name.style.opacity = 0;
+
+        message.style.opacity = 0;
+
+
+        /*
+            Convert the final 5%
+            into a 0 → 1 value.
+        */
+
+        const creditProgress =
+
+            (scrollProgress - .95) /
+            .05;
+
+
+        /*
+            Fade / scale credit in.
+        */
+
+        credit.style.opacity = 1;
+
+
+        const creditScale =
+
+            .80 +
+            creditProgress * .20;
+
+
+        credit.style.transform =
+
+            `translate(-50%, -50%)
+             scale(${creditScale})`;
+
+
+        /*
+            Matrix decoding effect.
+        */
+
+        credit.textContent =
+
+            scrambleText(
+
+                "In Courtesy of Land/FX",
+
+                creditProgress
+            );
+
+
+        /*
+            Keep glitching while
+            the characters decode.
+        */
+
+        if (
+            creditProgress < 1
+        ) {
+
+            credit.classList.add(
+                "glitch"
+            );
+
+        }
+
+        else {
+
+            credit.classList.remove(
+                "glitch"
+            );
+
+
+            credit.textContent =
+                "In Courtesy of Land/FX";
+        }
+    }
+
+
+
+    /* =====================================================
+       INSTRUCTION
+    ===================================================== */
+
+    if (
+        scrollProgress < .08
+    ) {
+
+        instruction.style.opacity = 1;
+
+    }
+
+    else {
+
+        instruction.style.opacity =
+
+            Math.max(
+                0,
+                1 -
+                scrollProgress * 4
+            );
+    }
+
+
+
+    /* =====================================================
+       FINAL FLASH
+    ===================================================== */
+
+    if (
+        scrollProgress > .985
+    ) {
+
+        const flashAmount =
+
+            (
+                scrollProgress - .985
+            ) * 6;
+
+
+        flash.style.opacity =
+
+            Math.min(
+                .06,
+                flashAmount
+            );
+
+    }
+
+    else {
+
+        flash.style.opacity = 0;
+    }
+
+}
+
+
+
+/* =========================================================
    INITIAL STATE
 ========================================================= */
 
@@ -1202,3 +1435,4 @@ updateScroll();
 </body>
 
 </html>
+```
