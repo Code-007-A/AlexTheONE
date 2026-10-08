@@ -9,10 +9,11 @@
 
 <title>ALEX — The ONE</title>
 
+
 <style>
 
 /* =========================================================
-   PAGE
+   BASIC PAGE
 ========================================================= */
 
 * {
@@ -21,42 +22,38 @@
     box-sizing: border-box;
 }
 
-html {
+html,
+body {
     background: #000;
 }
 
 body {
-    background: #000;
-    color: #00ff41;
-
-    font-family: "Courier New", monospace;
-
-    /*
-        TOTAL PAGE LENGTH
-
-        Increase this number if you want
-        even more scrolling.
-
-        1000vh = 10 screen heights
-    */
 
     height: 1000vh;
 
     overflow-x: hidden;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    background: #000;
 }
 
 
 /* =========================================================
-   MATRIX CANVAS
+   MATRIX BACKGROUND
 ========================================================= */
 
 #matrix {
+
     position: fixed;
 
-    inset: 0;
+    left: 0;
+    top: 0;
 
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
 
     z-index: 1;
 
@@ -69,9 +66,14 @@ body {
 ========================================================= */
 
 .overlay {
+
     position: fixed;
 
-    inset: 0;
+    left: 0;
+    top: 0;
+
+    width: 100vw;
+    height: 100vh;
 
     z-index: 2;
 
@@ -80,9 +82,48 @@ body {
     background:
         radial-gradient(
             circle at center,
-            rgba(0,255,65,.06),
-            rgba(0,0,0,.72)
+            rgba(0,255,65,0.05),
+            rgba(0,0,0,0.55)
         );
+}
+
+
+/* =========================================================
+   COMMON TEXT SETTINGS
+========================================================= */
+
+#name,
+#message,
+#credit {
+
+    position: fixed;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%)
+        scale(.8);
+
+    z-index: 5;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    text-align: center;
+
+    color: #00ff41;
+
+    text-shadow:
+
+        0 0 5px #00ff41,
+
+        0 0 15px #00ff41,
+
+        0 0 30px #00ff41,
+
+        0 0 60px rgba(0,255,65,.6);
 }
 
 
@@ -92,22 +133,7 @@ body {
 
 #name {
 
-    position: fixed;
-
-    z-index: 5;
-
-    left: 50%;
-    top: 50%;
-
-    transform:
-        translate(-50%, -50%)
-        scale(.70);
-
     width: 100%;
-
-    text-align: center;
-
-    font-family: "Courier New", monospace;
 
     font-size:
         clamp(
@@ -120,27 +146,7 @@ body {
 
     letter-spacing: .10em;
 
-    color: #00ff41;
-
-    text-shadow:
-
-        0 0 5px #00ff41,
-
-        0 0 15px #00ff41,
-
-        0 0 35px #00ff41,
-
-        0 0 70px rgba(0,255,65,.7);
-
-    opacity: 0;
-
     white-space: nowrap;
-
-    transition:
-
-        opacity .12s linear,
-
-        transform .12s linear;
 }
 
 
@@ -150,26 +156,11 @@ body {
 
 #message {
 
-    position: fixed;
-
-    z-index: 6;
-
-    left: 50%;
-    top: 50%;
-
-    transform:
-        translate(-50%, -50%)
-        scale(.90);
-
     width: 90%;
-
-    text-align: center;
-
-    font-family: "Courier New", monospace;
 
     font-size:
         clamp(
-            24px,
+            25px,
             4.5vw,
             72px
         );
@@ -179,30 +170,6 @@ body {
     line-height: 1.35;
 
     letter-spacing: .04em;
-
-    color: #00ff41;
-
-    text-shadow:
-
-        0 0 5px #00ff41,
-
-        0 0 15px #00ff41,
-
-        0 0 30px #00ff41,
-
-        0 0 60px rgba(0,255,65,.7);
-
-    opacity: 0;
-
-    white-space: normal;
-
-    pointer-events: none;
-
-    transition:
-
-        opacity .15s linear,
-
-        transform .15s linear;
 }
 
 
@@ -212,26 +179,7 @@ body {
 
 #credit {
 
-    position: fixed;
-
-    z-index: 7;
-
-    left: 50%;
-    top: 50%;
-
-    transform:
-        translate(-50%, -50%)
-        scale(.90);
-
     width: 90%;
-
-    text-align: center;
-
-    font-family: "Courier New", monospace;
-
-    /*
-        Smaller than the main message
-    */
 
     font-size:
         clamp(
@@ -245,28 +193,6 @@ body {
     line-height: 1.4;
 
     letter-spacing: .08em;
-
-    color: #00ff41;
-
-    text-shadow:
-
-        0 0 5px #00ff41,
-
-        0 0 15px #00ff41,
-
-        0 0 30px rgba(0,255,65,.7);
-
-    opacity: 0;
-
-    white-space: normal;
-
-    pointer-events: none;
-
-    transition:
-
-        opacity .15s linear,
-
-        transform .15s linear;
 }
 
 
@@ -275,13 +201,16 @@ body {
 ========================================================= */
 
 .glitch {
-    animation: glitch .12s infinite;
+
+    animation:
+        glitch .13s infinite;
 }
 
 
 @keyframes glitch {
 
     0% {
+
         transform:
             translate(-50%, -50%)
             translate(0,0)
@@ -289,6 +218,7 @@ body {
     }
 
     20% {
+
         transform:
             translate(-50%, -50%)
             translate(-4px,2px)
@@ -296,6 +226,7 @@ body {
     }
 
     40% {
+
         transform:
             translate(-50%, -50%)
             translate(4px,-2px)
@@ -303,6 +234,7 @@ body {
     }
 
     60% {
+
         transform:
             translate(-50%, -50%)
             translate(-2px,-1px)
@@ -310,6 +242,7 @@ body {
     }
 
     80% {
+
         transform:
             translate(-50%, -50%)
             translate(3px,2px)
@@ -317,39 +250,8 @@ body {
     }
 
     100% {
+
         transform:
             translate(-50%, -50%)
             translate(0,0)
-            scale(1);
-    }
-}
-
-
-/* =========================================================
-   INSTRUCTION
-========================================================= */
-
-#instruction {
-
-    position: fixed;
-
-    z-index: 8;
-
-    left: 50%;
-
-    bottom: 8%;
-
-    transform:
-        translateX(-50%);
-
-    color:
-        rgba(0,255,65,.85);
-
-    font-size: 14px;
-
-    letter-spacing: 4px;
-
-    text-align: center;
-
-    text-shadow:
-       
+           
