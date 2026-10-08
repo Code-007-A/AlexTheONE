@@ -38,11 +38,6 @@ body {
         "Courier New",
         monospace;
 
-    /*
-        Increase this number if you want
-        more scrolling distance.
-    */
-
     height: 1000vh;
 
     overflow-x: hidden;
@@ -115,10 +110,6 @@ body {
 
     text-align: center;
 
-    font-family:
-        "Courier New",
-        monospace;
-
     font-size:
         clamp(
             70px,
@@ -145,12 +136,6 @@ body {
     opacity: 0;
 
     white-space: nowrap;
-
-    transition:
-
-        opacity .12s linear,
-
-        transform .12s linear;
 }
 
 
@@ -174,10 +159,6 @@ body {
     width: 90%;
 
     text-align: center;
-
-    font-family:
-        "Courier New",
-        monospace;
 
     font-size:
         clamp(
@@ -206,15 +187,7 @@ body {
 
     opacity: 0;
 
-    white-space: normal;
-
     pointer-events: none;
-
-    transition:
-
-        opacity .15s linear,
-
-        transform .15s linear;
 }
 
 
@@ -233,15 +206,11 @@ body {
 
     transform:
         translate(-50%, -50%)
-        scale(.80);
+        scale(.75);
 
-    width: 90%;
+    width: 95%;
 
     text-align: center;
-
-    font-family:
-        "Courier New",
-        monospace;
 
     font-size:
         clamp(
@@ -273,17 +242,11 @@ body {
     white-space: nowrap;
 
     pointer-events: none;
-
-    transition:
-
-        opacity .12s linear,
-
-        transform .12s linear;
 }
 
 
 /* =========================================================
-   GLITCH EFFECT
+   GLITCH
 ========================================================= */
 
 .glitch {
@@ -297,50 +260,32 @@ body {
 
     0% {
 
-        transform:
-            translate(-50%, -50%)
-            translate(0,0)
-            scale(1);
+        filter:
+            brightness(1);
     }
 
-    20% {
+    25% {
 
-        transform:
-            translate(-50%, -50%)
-            translate(-4px,2px)
-            scale(1.01);
+        filter:
+            brightness(1.8);
     }
 
-    40% {
+    50% {
 
-        transform:
-            translate(-50%, -50%)
-            translate(4px,-2px)
-            scale(.99);
+        filter:
+            brightness(.7);
     }
 
-    60% {
+    75% {
 
-        transform:
-            translate(-50%, -50%)
-            translate(-2px,-1px)
-            scale(1.01);
-    }
-
-    80% {
-
-        transform:
-            translate(-50%, -50%)
-            translate(3px,2px)
-            scale(.99);
+        filter:
+            brightness(1.5);
     }
 
     100% {
 
-        transform:
-            translate(-50%, -50%)
-            translate(0,0)
-            scale(1);
+        filter:
+            brightness(1);
     }
 }
 
@@ -441,7 +386,7 @@ body {
 
 
 /* =========================================================
-   BOTTOM FLASH
+   FLASH
 ========================================================= */
 
 #flash {
@@ -457,9 +402,6 @@ body {
     opacity: 0;
 
     pointer-events: none;
-
-    transition:
-        opacity .1s linear;
 }
 
 </style>
@@ -471,7 +413,7 @@ body {
 
 
 <!-- =====================================================
-     MATRIX BACKGROUND
+     MATRIX
 ===================================================== -->
 
 <canvas id="matrix"></canvas>
@@ -516,10 +458,6 @@ body {
 </div>
 
 
-<!-- =====================================================
-     EFFECTS
-===================================================== -->
-
 <div id="flash"></div>
 
 <div class="scanlines"></div>
@@ -551,10 +489,6 @@ let columns;
 let drops = [];
 
 
-/*
-    Matrix character set
-*/
-
 const matrixCharacters =
 
 "アァカサタナハマヤラワ0123456789" +
@@ -565,7 +499,7 @@ const matrixCharacters =
 
 
 /* =========================================================
-   RESIZE CANVAS
+   RESIZE
 ========================================================= */
 
 function resizeCanvas() {
@@ -615,12 +549,6 @@ window.addEventListener(
 
 function drawMatrix() {
 
-
-    /*
-        Transparent black creates
-        the trailing effect.
-    */
-
     ctx.fillStyle =
         "rgba(0,0,0,0.075)";
 
@@ -644,7 +572,6 @@ function drawMatrix() {
         i++
     ) {
 
-
         const character =
 
             matrixCharacters[
@@ -654,10 +581,6 @@ function drawMatrix() {
                 )
             ];
 
-
-        /*
-            Random brightness
-        */
 
         const brightness =
             Math.random();
@@ -694,19 +617,13 @@ function drawMatrix() {
 
             i * fontSize,
 
-            drops[i] *
-            fontSize
+            drops[i] * fontSize
         );
 
 
-        /*
-            Restart streams
-        */
-
         if (
 
-            drops[i] *
-            fontSize >
+            drops[i] * fontSize >
             height
 
             &&
@@ -771,8 +688,9 @@ const glitchCharacters =
 "アカサタナハマヤラ";
 
 
+
 /* =========================================================
-   GENERATE SCRAMBLED TEXT
+   SCRAMBLE TEXT
 ========================================================= */
 
 function scrambleText(
@@ -789,32 +707,26 @@ function scrambleText(
         i++
     ) {
 
+        const character =
+            target[i];
+
 
         /*
-            Spaces remain spaces.
+            Keep spaces and punctuation.
         */
 
         if (
-            target[i] === " "
-            ||
-            target[i] === "\n"
-            ||
-            target[i] === "-"
-            ||
-            target[i] === ";"
+            character === " " ||
+            character === "-" ||
+            character === "/" ||
+            character === ";"
         ) {
 
-            output +=
-                target[i];
+            output += character;
 
             continue;
         }
 
-
-        /*
-            Each character gets
-            its own decoding point.
-        */
 
         const characterProgress =
 
@@ -828,8 +740,7 @@ function scrambleText(
             characterProgress >= 1
         ) {
 
-            output +=
-                target[i];
+            output += character;
 
         }
 
@@ -874,39 +785,25 @@ function scrambleTextHTML(
             target[i];
 
 
-        /*
-            Preserve line breaks.
-        */
-
         if (
             character === "\n"
         ) {
 
-            output +=
-                "<br>";
+            output += "<br>";
 
             continue;
         }
 
-
-        /*
-            Preserve spaces.
-        */
 
         if (
             character === " "
         ) {
 
-            output +=
-                "&nbsp;";
+            output += "&nbsp;";
 
             continue;
         }
 
-
-        /*
-            Preserve punctuation.
-        */
 
         if (
             character === "-" ||
@@ -914,17 +811,11 @@ function scrambleTextHTML(
             character === ";"
         ) {
 
-            output +=
-                character;
+            output += character;
 
             continue;
         }
 
-
-        /*
-            Decode character
-            progressively.
-        */
 
         const characterProgress =
 
@@ -938,8 +829,7 @@ function scrambleTextHTML(
             characterProgress >= 1
         ) {
 
-            output +=
-                character;
+            output += character;
 
         }
 
@@ -976,10 +866,6 @@ window.addEventListener(
 function updateScroll() {
 
 
-    /*
-        Calculate total scroll.
-    */
-
     const maxScroll =
 
         document.documentElement
@@ -988,36 +874,31 @@ function updateScroll() {
         window.innerHeight;
 
 
-    let scrollProgress =
+    let p =
 
         window.scrollY /
         maxScroll;
 
 
-    /*
-        Keep between 0 and 1.
-    */
-
-    scrollProgress =
+    p =
 
         Math.max(
             0,
             Math.min(
                 1,
-                scrollProgress
+                p
             )
         );
 
 
 
     /* =====================================================
-       STAGE 1
-       MATRIX ONLY
        0% → 8%
+       MATRIX ONLY
     ===================================================== */
 
     if (
-        scrollProgress < .08
+        p < .08
     ) {
 
         name.style.opacity = 0;
@@ -1030,43 +911,37 @@ function updateScroll() {
 
 
     /* =====================================================
-       STAGE 2
-       ALEX DECODING
        8% → 38%
+       ALEX DECODES
     ===================================================== */
 
     if (
-        scrollProgress >= .08 &&
-        scrollProgress < .38
+        p >= .08 &&
+        p < .38
     ) {
 
-        const alexProgress =
+        const progress =
 
-            (scrollProgress - .08) /
+            (p - .08) /
             .30;
 
 
         name.style.opacity =
-            alexProgress;
-
-
-        const alexScale =
-
-            .75 +
-            alexProgress * .25;
+            progress;
 
 
         name.style.transform =
 
             `translate(-50%, -50%)
-             scale(${alexScale})`;
+             scale(${.75 +
+                    progress * .25})`;
 
 
         name.textContent =
 
             scrambleText(
                 "ALEX",
-                alexProgress
+                progress
             );
 
 
@@ -1083,14 +958,13 @@ function updateScroll() {
 
 
     /* =====================================================
-       STAGE 3
-       ALEX HOLD
        38% → 65%
+       ALEX HOLDS
     ===================================================== */
 
     if (
-        scrollProgress >= .38 &&
-        scrollProgress < .65
+        p >= .38 &&
+        p < .65
     ) {
 
         name.style.opacity = 1;
@@ -1115,21 +989,20 @@ function updateScroll() {
 
 
     /* =====================================================
-       STAGE 4
-       ALEX FADES OUT
        65% → 72%
+       ALEX FADES
     ===================================================== */
 
     if (
-        scrollProgress >= .65 &&
-        scrollProgress < .72
+        p >= .65 &&
+        p < .72
     ) {
 
-        const fadeOut =
+        const fade =
 
             1 -
             (
-                (scrollProgress - .65) /
+                (p - .65) /
                 .07
             );
 
@@ -1137,7 +1010,7 @@ function updateScroll() {
         name.style.opacity =
             Math.max(
                 0,
-                fadeOut
+                fade
             );
 
 
@@ -1154,39 +1027,33 @@ function updateScroll() {
 
 
     /* =====================================================
-       STAGE 5
-       ANNIVERSARY MESSAGE DECODING
-       72% → 91%
+       72% → 88%
+       ANNIVERSARY DECODES
     ===================================================== */
 
     if (
-        scrollProgress >= .72 &&
-        scrollProgress < .91
+        p >= .72 &&
+        p < .88
     ) {
 
-        const messageProgress =
+        const progress =
 
-            (scrollProgress - .72) /
-            .19;
+            (p - .72) /
+            .16;
 
 
         name.style.opacity = 0;
 
 
         message.style.opacity =
-            messageProgress;
-
-
-        const messageScale =
-
-            .90 +
-            messageProgress * .10;
+            progress;
 
 
         message.style.transform =
 
             `translate(-50%, -50%)
-             scale(${messageScale})`;
+             scale(${.90 +
+                    progress * .10})`;
 
 
         message.innerHTML =
@@ -1196,7 +1063,7 @@ function updateScroll() {
                 "You're the ONE;\n" +
                 "Happy Work-Anniversary!",
 
-                messageProgress
+                progress
             );
 
 
@@ -1211,14 +1078,13 @@ function updateScroll() {
 
 
     /* =====================================================
-       STAGE 6
-       ANNIVERSARY MESSAGE HOLD
-       91% → 94%
+       88% → 92%
+       ANNIVERSARY HOLDS
     ===================================================== */
 
     if (
-        scrollProgress >= .91 &&
-        scrollProgress < .94
+        p >= .88 &&
+        p < .92
     ) {
 
         name.style.opacity = 0;
@@ -1228,6 +1094,7 @@ function updateScroll() {
         message.style.transform =
 
             "translate(-50%, -50%) scale(1)";
+
 
         message.innerHTML =
 
@@ -1246,22 +1113,21 @@ function updateScroll() {
 
 
     /* =====================================================
-       STAGE 7
-       ANNIVERSARY FADES OUT
-       94% → 95%
+       92% → 94%
+       ANNIVERSARY FADES
     ===================================================== */
 
     if (
-        scrollProgress >= .94 &&
-        scrollProgress < .95
+        p >= .92 &&
+        p < .94
     ) {
 
-        const fadeOut =
+        const fade =
 
             1 -
             (
-                (scrollProgress - .94) /
-                .01
+                (p - .92) /
+                .02
             );
 
 
@@ -1270,7 +1136,7 @@ function updateScroll() {
         message.style.opacity =
             Math.max(
                 0,
-                fadeOut
+                fade
             );
 
         credit.style.opacity = 0;
@@ -1279,13 +1145,12 @@ function updateScroll() {
 
 
     /* =====================================================
-       STAGE 8
-       FINAL CREDIT DECODING
-       95% → 100%
+       94% → 100%
+       FINAL CREDIT DECODES
     ===================================================== */
 
     if (
-        scrollProgress >= .95
+        p >= .94
     ) {
 
         name.style.opacity = 0;
@@ -1294,37 +1159,39 @@ function updateScroll() {
 
 
         /*
-            Convert the final 5%
-            into a 0 → 1 value.
+            FINAL CREDIT
+            gets a full 6% of
+            the scroll distance.
         */
 
-        const creditProgress =
+        const progress =
 
-            (scrollProgress - .95) /
-            .05;
+            (p - .94) /
+            .06;
 
-
-        /*
-            Fade / scale credit in.
-        */
 
         credit.style.opacity = 1;
 
 
-        const creditScale =
+        /*
+            Start smaller and
+            grow into place.
+        */
 
-            .80 +
-            creditProgress * .20;
+        const scale =
+
+            .75 +
+            progress * .25;
 
 
         credit.style.transform =
 
             `translate(-50%, -50%)
-             scale(${creditScale})`;
+             scale(${scale})`;
 
 
         /*
-            Matrix decoding effect.
+            MATRIX DECODING
         */
 
         credit.textContent =
@@ -1333,17 +1200,16 @@ function updateScroll() {
 
                 "In Courtesy of Land/FX",
 
-                creditProgress
+                progress
             );
 
 
         /*
-            Keep glitching while
-            the characters decode.
+            Glitch while decoding.
         */
 
         if (
-            creditProgress < 1
+            progress < 1
         ) {
 
             credit.classList.add(
@@ -1371,7 +1237,7 @@ function updateScroll() {
     ===================================================== */
 
     if (
-        scrollProgress < .08
+        p < .08
     ) {
 
         instruction.style.opacity = 1;
@@ -1380,13 +1246,7 @@ function updateScroll() {
 
     else {
 
-        instruction.style.opacity =
-
-            Math.max(
-                0,
-                1 -
-                scrollProgress * 4
-            );
+        instruction.style.opacity = 0;
     }
 
 
@@ -1396,14 +1256,12 @@ function updateScroll() {
     ===================================================== */
 
     if (
-        scrollProgress > .985
+        p > .985
     ) {
 
         const flashAmount =
 
-            (
-                scrollProgress - .985
-            ) * 6;
+            (p - .985) * 6;
 
 
         flash.style.opacity =
