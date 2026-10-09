@@ -21,7 +21,7 @@ html, body {
 }
 
 body {
-    height: 400vh;
+    height: 600vh;
 }
 
 /* MATRIX BACKGROUND */
@@ -365,7 +365,6 @@ function scrambleHTML(target, progress) {
    UPDATED SCENE CONTROLLER
 ========================================================= */
 
-
 function updateScene() {
     const maxScroll =
         document.documentElement.scrollHeight -
@@ -391,7 +390,7 @@ function updateScene() {
         name.style.opacity = 1;
         message.style.opacity = 0;
 
-        name.textContent = scrambleText("ALEX", p);
+        name.textContent = scrambleText(nameText, p);
 
         name.style.transform =
             `translate(-50%, -50%) scale(${0.85 + p * 0.15})`;
@@ -403,7 +402,7 @@ function updateScene() {
     /* STAGE 3: ALEX HOLDS — 35% TO 48% */
     else if (progress < .48) {
         name.style.opacity = 1;
-        name.textContent = "ALEX";
+        name.textContent = nameText;
 
         name.style.transform =
             "translate(-50%, -50%) scale(1)";
@@ -425,21 +424,14 @@ function updateScene() {
         message.classList.remove("glitch");
     }
 
-    /*
-       STAGE 5: SLOW ANNIVERSARY DECODING
-       53% TO 90%
-       The longer range makes the letters decode more slowly.
-    */
-    else if (progress < .90) {
-        const p = (progress - .53) / .37;
+    /* STAGE 5: MESSAGE DECODES — 53% TO 82% */
+    else if (progress < .82) {
+        const p = (progress - .53) / .29;
 
         name.style.opacity = 0;
         message.style.opacity = 1;
 
-        message.innerHTML = scrambleHTML(
-            messageText,
-            p
-        );
+        message.innerHTML = scrambleHTML(messageText, p);
 
         message.style.transform =
             `translate(-50%, -50%) scale(${0.85 + p * 0.15})`;
@@ -448,10 +440,7 @@ function updateScene() {
         name.classList.remove("glitch");
     }
 
-    /*
-       STAGE 6: COMPLETE MESSAGE
-       90% TO BOTTOM
-    */
+    /* STAGE 6: MESSAGE STAYS VISIBLE — 82% TO BOTTOM */
     else {
         name.style.opacity = 0;
         message.style.opacity = 1;
@@ -467,11 +456,12 @@ function updateScene() {
         name.classList.remove("glitch");
     }
 
-    /* HIDE INSTRUCTION */
-    instruction.style.opacity =
-        progress < .08 ? 1 : 0;
+    /* HIDE INSTRUCTION AFTER SCROLLING STARTS */
+    instruction.style.opacity = progress < .08 ? 1 : 0;
 }
 
+window.addEventListener("scroll", updateScene, { passive: true });
+updateScene();
 
 
 /* =========================================================
