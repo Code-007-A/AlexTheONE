@@ -1,578 +1,288 @@
-```html id="3b8w0k"
+```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
-
-<title>ALEX — The ONE</title>
-
+<title>Matrix Name Decoder</title>
 
 <style>
-
-/* =========================================================
-   BASIC PAGE
-========================================================= */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    background: #000;
-}
-
-body {
-
-    background: #000;
-
-    color: #00ff41;
-
-    font-family:
-        "Courier New",
-        monospace;
-
-    /*
-        CHANGE THIS NUMBER TO MAKE
-        THE PAGE LONGER OR SHORTER.
-    */
-
-    height: 1000vh;
-
-    overflow-x: hidden;
-}
-
-
-/* =========================================================
-   MATRIX
-========================================================= */
-
-#matrix {
-
-    position: fixed;
-
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
-    z-index: 1;
-
-    background: #000;
-}
-
-
-/* =========================================================
-   DARK OVERLAY
-========================================================= */
-
-.overlay {
-
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 2;
-
-    pointer-events: none;
-
-    background:
-
-        radial-gradient(
-            circle at center,
-
-            rgba(0,255,65,.06),
-
-            rgba(0,0,0,.72)
-        );
-}
-
-
-/* =========================================================
-   ALEX
-========================================================= */
-
-#name {
-
-    position: fixed;
-
-    z-index: 5;
-
-    left: 50%;
-    top: 50%;
-
-    transform:
-        translate(-50%, -50%)
-        scale(.75);
-
-    width: 100%;
-
-    text-align: center;
-
-    font-size:
-        clamp(
-            70px,
-            17vw,
-            250px
-        );
-
-    font-weight: bold;
-
-    letter-spacing: .10em;
-
-    color: #00ff41;
-
-    text-shadow:
-
-        0 0 5px #00ff41,
-
-        0 0 15px #00ff41,
-
-        0 0 35px #00ff41,
-
-        0 0 70px rgba(0,255,65,.7);
-
-    opacity: 0;
-
-    white-space: nowrap;
-}
-
-
-/* =========================================================
-   ANNIVERSARY MESSAGE
-========================================================= */
-
-#message {
-
-    position: fixed;
-
-    z-index: 6;
-
-    left: 50%;
-    top: 50%;
-
-    transform:
-        translate(-50%, -50%)
-        scale(.90);
-
-    width: 90%;
-
-    text-align: center;
-
-    font-size:
-        clamp(
-            24px,
-            4.5vw,
-            72px
-        );
-
-    font-weight: bold;
-
-    line-height: 1.35;
-
-    letter-spacing: .04em;
-
-    color: #00ff41;
-
-    text-shadow:
-
-        0 0 5px #00ff41,
-
-        0 0 15px #00ff41,
-
-        0 0 30px #00ff41,
-
-        0 0 60px rgba(0,255,65,.7);
-
-    opacity: 0;
-
-    pointer-events: none;
-}
-
-
-/* =========================================================
-   FINAL CREDIT
-========================================================= */
-
-#credit {
-
-    position: fixed;
-
-    z-index: 7;
-
-    left: 50%;
-    top: 50%;
-
-    transform:
-        translate(-50%, -50%)
-        scale(.75);
-
-    width: 95%;
-
-    text-align: center;
-
-    font-size:
-        clamp(
-            18px,
-            3.2vw,
-            48px
-        );
-
-    font-weight: normal;
-
-    line-height: 1.4;
-
-    letter-spacing: .08em;
-
-    color: #00ff41;
-
-    text-shadow:
-
-        0 0 5px #00ff41,
-
-        0 0 15px #00ff41,
-
-        0 0 30px #00ff41,
-
-        0 0 60px rgba(0,255,65,.7);
-
-    opacity: 0;
-
-    white-space: nowrap;
-
-    pointer-events: none;
-}
-
-
-/* =========================================================
-   GLITCH
-========================================================= */
-
-.glitch {
-
-    animation:
-        glitch .12s infinite;
-}
-
-
-@keyframes glitch {
-
-    0% {
-        filter: brightness(1);
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
 
-    25% {
-        filter: brightness(1.7);
+    html, body {
+        background: #000;
+        color: #00ff41;
+        font-family: "Courier New", monospace;
+        overflow-x: hidden;
     }
 
-    50% {
-        filter: brightness(.75);
+    /* Tall page gives us room to scroll */
+    body {
+        height: 400vh;
     }
 
-    75% {
-        filter: brightness(1.5);
+    /* Matrix canvas stays fixed */
+    #matrix {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        background: #000;
     }
 
-    100% {
-        filter: brightness(1);
+    /* Dark overlay helps the name stand out */
+    .overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        background:
+            radial-gradient(
+                circle at center,
+                rgba(0, 255, 65, 0.05),
+                rgba(0, 0, 0, 0.65)
+            );
     }
-}
 
+    /* Center name */
+    #name {
+        position: fixed;
+        z-index: 5;
 
-/* =========================================================
-   SCROLL INSTRUCTION
-========================================================= */
+        left: 50%;
+        top: 50%;
 
-#instruction {
+        transform:
+            translate(-50%, -50%)
+            scale(0.85);
 
-    position: fixed;
+        font-family: "Courier New", monospace;
+        font-size: clamp(70px, 16vw, 240px);
+        font-weight: bold;
+        letter-spacing: 0.08em;
 
-    z-index: 7;
+        color: #00ff41;
 
-    left: 50%;
+        text-shadow:
+            0 0 5px #00ff41,
+            0 0 15px #00ff41,
+            0 0 35px rgba(0,255,65,.8),
+            0 0 70px rgba(0,255,65,.5);
 
-    bottom: 8%;
+        opacity: 0;
 
-    transform:
-        translateX(-50%);
+        white-space: nowrap;
 
-    color:
-        rgba(0,255,65,.85);
+        transition:
+            opacity 0.15s linear,
+            transform 0.15s linear;
+    }
 
-    font-size: 14px;
+    /* Glitch layers */
+    #name::before,
+    #name::after {
+        content: "ALEX";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
 
-    letter-spacing: 4px;
+        overflow: hidden;
 
-    text-align: center;
+        opacity: 0;
+    }
 
-    text-shadow:
-        0 0 10px #00ff41;
+    #name::before {
+        color: #00ffff;
+        transform: translate(3px, -2px);
+    }
 
-    transition:
-        opacity .5s ease;
+    #name::after {
+        color: #ff003c;
+        transform: translate(-3px, 2px);
+    }
 
-    white-space: nowrap;
-}
+    .glitch {
+        animation: glitch 0.15s infinite;
+    }
 
+    @keyframes glitch {
+        0% {
+            transform:
+                translate(-50%, -50%)
+                translate(0,0)
+                scale(1);
+        }
 
-/* =========================================================
-   SCANLINES
-========================================================= */
+        25% {
+            transform:
+                translate(-50%, -50%)
+                translate(-4px,2px)
+                scale(1.01);
+        }
 
-.scanlines {
+        50% {
+            transform:
+                translate(-50%, -50%)
+                translate(4px,-2px)
+                scale(.99);
+        }
 
-    position: fixed;
+        75% {
+            transform:
+                translate(-50%, -50%)
+                translate(-2px,-1px)
+                scale(1.01);
+        }
 
-    inset: 0;
+        100% {
+            transform:
+                translate(-50%, -50%)
+                translate(0,0)
+                scale(1);
+        }
+    }
 
-    z-index: 10;
+    /* Intro text */
+    #instruction {
+        position: fixed;
+        z-index: 6;
 
-    pointer-events: none;
+        left: 50%;
+        bottom: 8%;
 
-    background:
+        transform: translateX(-50%);
 
-        repeating-linear-gradient(
+        color: rgba(0,255,65,.8);
 
-            to bottom,
+        font-size: 14px;
+        letter-spacing: 4px;
 
-            rgba(255,255,255,.025)
-            0px,
+        text-align: center;
 
-            rgba(255,255,255,.025)
-            1px,
+        text-shadow:
+            0 0 10px #00ff41;
 
-            transparent
-            2px,
+        transition: opacity .5s ease;
+    }
 
-            transparent
-            4px
-        );
+    /* Scanline effect */
+    .scanlines {
+        position: fixed;
+        inset: 0;
+        z-index: 10;
 
-    mix-blend-mode: screen;
-}
+        pointer-events: none;
 
+        background:
+            repeating-linear-gradient(
+                to bottom,
+                rgba(255,255,255,0.025) 0px,
+                rgba(255,255,255,0.025) 1px,
+                transparent 2px,
+                transparent 4px
+            );
 
-/* =========================================================
-   SCREEN GLOW
-========================================================= */
+        mix-blend-mode: screen;
+    }
 
-.screenGlow {
+    /* Slight green glow around entire screen */
+    .screenGlow {
+        position: fixed;
+        inset: 0;
+        z-index: 9;
 
-    position: fixed;
+        pointer-events: none;
 
-    inset: 0;
-
-    z-index: 9;
-
-    pointer-events: none;
-
-    box-shadow:
-
-        inset
-        0 0 100px
-        rgba(0,255,65,.12);
-}
-
-
-/* =========================================================
-   FLASH
-========================================================= */
-
-#flash {
-
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 11;
-
-    background: #00ff41;
-
-    opacity: 0;
-
-    pointer-events: none;
-}
-
+        box-shadow:
+            inset 0 0 100px rgba(0,255,65,.12);
+    }
 </style>
-
 </head>
 
-
 <body>
-
-
-<!-- =====================================================
-     MATRIX BACKGROUND
-===================================================== -->
 
 <canvas id="matrix"></canvas>
 
 <div class="overlay"></div>
 
-
-<!-- =====================================================
-     ALEX
-===================================================== -->
-
-<div id="name">
-    ALEX
-</div>
-
-
-<!-- =====================================================
-     ANNIVERSARY MESSAGE
-===================================================== -->
-
-<div id="message">
-    You're the ONE;<br>
-    Happy Work-Anniversary!
-</div>
-
-
-<!-- =====================================================
-     FINAL CREDIT
-===================================================== -->
-
-<div id="credit">
-    In Courtesy of Land/FX
-</div>
-
-
-<!-- =====================================================
-     INSTRUCTION
-===================================================== -->
+<div id="name">ALEX</div>
 
 <div id="instruction">
     SCROLL TO DECODE
 </div>
 
-
-<!-- =====================================================
-     EFFECTS
-===================================================== -->
-
-<div id="flash"></div>
-
 <div class="scanlines"></div>
-
 <div class="screenGlow"></div>
-
 
 
 <script>
 
 /* =========================================================
-   MATRIX ENGINE
+   MATRIX RAIN
 ========================================================= */
 
-const canvas =
-    document.getElementById("matrix");
-
-const ctx =
-    canvas.getContext("2d");
-
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
 
 let width;
 let height;
 
 let fontSize = 18;
-
 let columns;
-
 let drops = [];
 
-
 const matrixCharacters =
-
-"アァカサタナハマヤラワ0123456789" +
-
-"ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-
-"#$%&*@";
-
-
-/* =========================================================
-   RESIZE
-========================================================= */
+    "アァカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&*@";
 
 function resizeCanvas() {
 
-    width =
-        canvas.width =
-        window.innerWidth;
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
 
-    height =
-        canvas.height =
-        window.innerHeight;
-
-
-    columns =
-        Math.floor(
-            width / fontSize
-        );
-
+    columns = Math.floor(width / fontSize);
 
     drops = [];
 
-
-    for (
-        let i = 0;
-        i < columns;
-        i++
-    ) {
+    for (let i = 0; i < columns; i++) {
 
         drops[i] =
             Math.random() * -50;
     }
 }
 
-
 resizeCanvas();
 
-
-window.addEventListener(
-    "resize",
-    resizeCanvas
-);
+window.addEventListener("resize", resizeCanvas);
 
 
 /* =========================================================
-   MATRIX RAIN
+   DRAW MATRIX
 ========================================================= */
 
 function drawMatrix() {
 
-    ctx.fillStyle =
-        "rgba(0,0,0,0.075)";
+    /*
+        Slight black transparency creates the
+        classic Matrix trailing effect.
+    */
 
-
-    ctx.fillRect(
-        0,
-        0,
-        width,
-        height
-    );
-
+    ctx.fillStyle = "rgba(0,0,0,0.075)";
+    ctx.fillRect(0, 0, width, height);
 
     ctx.font =
-        fontSize +
-        "px Courier New";
+        fontSize + "px Courier New";
 
-
-    for (
-        let i = 0;
-        i < drops.length;
-        i++
-    ) {
+    for (let i = 0; i < drops.length; i++) {
 
         const character =
-
             matrixCharacters[
                 Math.floor(
                     Math.random() *
@@ -580,762 +290,219 @@ function drawMatrix() {
                 )
             ];
 
+        /*
+            Random brightness
+        */
 
         const brightness =
             Math.random();
 
+        if (brightness > .94) {
 
-        if (
-            brightness > .94
-        ) {
+            ctx.fillStyle = "#ffffff";
 
-            ctx.fillStyle =
-                "#ffffff";
+        } else if (brightness > .75) {
 
+            ctx.fillStyle = "#66ff88";
+
+        } else {
+
+            ctx.fillStyle = "#00ff41";
         }
-
-        else if (
-            brightness > .75
-        ) {
-
-            ctx.fillStyle =
-                "#66ff88";
-
-        }
-
-        else {
-
-            ctx.fillStyle =
-                "#00ff41";
-        }
-
 
         ctx.fillText(
-
             character,
-
             i * fontSize,
-
             drops[i] * fontSize
         );
 
+        /*
+            Reset individual streams
+        */
 
         if (
-
-            drops[i] * fontSize >
-            height
-
-            &&
-
+            drops[i] * fontSize > height &&
             Math.random() > .975
-
         ) {
 
             drops[i] = 0;
         }
 
-
-        drops[i] += .45;
+        drops[i] += 0.45;
     }
 
-
-    requestAnimationFrame(
-        drawMatrix
-    );
+    requestAnimationFrame(drawMatrix);
 }
-
 
 drawMatrix();
 
 
-
 /* =========================================================
-   ELEMENTS
+   SCROLL DECODING
 ========================================================= */
 
-const name =
-    document.getElementById("name");
-
-const message =
-    document.getElementById("message");
-
-const credit =
-    document.getElementById("credit");
-
+const name = document.getElementById("name");
 const instruction =
-    document.getElementById(
-        "instruction"
-    );
+    document.getElementById("instruction");
 
-const flash =
-    document.getElementById("flash");
-
-
-
-/* =========================================================
-   SCRAMBLE CHARACTERS
-========================================================= */
-
-const glitchCharacters =
-
-"ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-
-"0123456789" +
-
-"@#$%&*<>[]{}" +
-
-"アカサタナハマヤラ";
-
-
-
-/* =========================================================
-   SCRAMBLE NORMAL TEXT
-========================================================= */
-
-function scrambleText(
-    target,
-    progress
-) {
-
-    let output = "";
-
-
-    for (
-        let i = 0;
-        i < target.length;
-        i++
-    ) {
-
-        const character =
-            target[i];
-
-
-        /*
-            Keep spaces and punctuation.
-        */
-
-        if (
-            character === " " ||
-            character === "-" ||
-            character === "/" ||
-            character === ";"
-        ) {
-
-            output += character;
-
-            continue;
-        }
-
-
-        const characterProgress =
-
-            progress *
-            target.length
-            -
-            i;
-
-
-        if (
-            characterProgress >= 1
-        ) {
-
-            output += character;
-
-        }
-
-        else {
-
-            output +=
-
-                glitchCharacters[
-                    Math.floor(
-                        Math.random() *
-                        glitchCharacters.length
-                    )
-                ];
-        }
-    }
-
-
-    return output;
-}
-
-
-
-/* =========================================================
-   SCRAMBLE HTML
-========================================================= */
-
-function scrambleTextHTML(
-    target,
-    progress
-) {
-
-    let output = "";
-
-
-    for (
-        let i = 0;
-        i < target.length;
-        i++
-    ) {
-
-        const character =
-            target[i];
-
-
-        if (
-            character === "\n"
-        ) {
-
-            output += "<br>";
-
-            continue;
-        }
-
-
-        if (
-            character === " "
-        ) {
-
-            output += "&nbsp;";
-
-            continue;
-        }
-
-
-        if (
-            character === "-" ||
-            character === "!" ||
-            character === ";"
-        ) {
-
-            output += character;
-
-            continue;
-        }
-
-
-        const characterProgress =
-
-            progress *
-            target.length
-            -
-            i;
-
-
-        if (
-            characterProgress >= 1
-        ) {
-
-            output += character;
-
-        }
-
-        else {
-
-            output +=
-
-                glitchCharacters[
-                    Math.floor(
-                        Math.random() *
-                        glitchCharacters.length
-                    )
-                ];
-        }
-    }
-
-
-    return output;
-}
-
-
-
-/* =========================================================
-   SCROLL
-========================================================= */
-
-window.addEventListener(
-    "scroll",
-    updateScroll,
-    { passive: true }
-);
-
-
-function updateScroll() {
-
-
-    const documentHeight =
-        document.documentElement.scrollHeight;
-
-
-    const windowHeight =
-        window.innerHeight;
-
-
-    const maxScroll =
-        documentHeight -
-        windowHeight;
-
-
-    const scrollY =
-        window.scrollY;
-
-
-    let p =
-
-        maxScroll > 0
-        ?
-        scrollY / maxScroll
-        :
-        0;
-
-
-    p =
-
-        Math.max(
-            0,
-            Math.min(
-                1,
-                p
-            )
-        );
-
-
-    /*
-        =====================================================
-        IMPORTANT:
-        Detect the REAL bottom of the page.
-
-        This makes the final message appear even if
-        the browser never reports exactly 100%.
-        =====================================================
-    */
-
-    const distanceFromBottom =
-
-        documentHeight -
-        (
-            scrollY +
-            windowHeight
-        );
-
-
-    const atBottom =
-
-        distanceFromBottom <= 20;
-
-
-
-    /* =====================================================
-       ALEX
-       8% → 38%
-    ===================================================== */
-
-    if (
-        p < .08
-    ) {
-
-        name.style.opacity = 0;
-
-    }
-
-
-    else if (
-        p < .38
-    ) {
-
-        const progress =
-
-            (p - .08) /
-            .30;
-
-
-        name.style.opacity =
-            progress;
-
-
-        name.style.transform =
-
-            `translate(-50%, -50%)
-             scale(${.75 +
-                    progress * .25})`;
-
-
-        name.textContent =
-
-            scrambleText(
-                "ALEX",
-                progress
-            );
-
-
-        name.classList.add(
-            "glitch"
-        );
-
-    }
-
-
-    else if (
-        p < .65
-    ) {
-
-        name.style.opacity = 1;
-
-        name.style.transform =
-
-            "translate(-50%, -50%) scale(1)";
-
-        name.textContent =
-            "ALEX";
-
-        name.classList.remove(
-            "glitch"
-        );
-
-    }
-
-
-    else if (
-        p < .72
-    ) {
-
-        const fade =
-
-            1 -
-            (
-                (p - .65) /
-                .07
-            );
-
-
-        name.style.opacity =
-            Math.max(
-                0,
-                fade
-            );
-
-        name.classList.remove(
-            "glitch"
-        );
-
-    }
-
-
-    else {
-
-        name.style.opacity = 0;
-
-        name.classList.remove(
-            "glitch"
-        );
-    }
-
-
-
-    /* =====================================================
-       ANNIVERSARY MESSAGE
-       72% → 88%
-    ===================================================== */
-
-    if (
-        p >= .72 &&
-        p < .88
-    ) {
-
-        const progress =
-
-            (p - .72) /
-            .16;
-
-
-        message.style.opacity =
-            progress;
-
-
-        message.style.transform =
-
-            `translate(-50%, -50%)
-             scale(${.90 +
-                    progress * .10})`;
-
-
-        message.innerHTML =
-
-            scrambleTextHTML(
-
-                "You're the ONE;\n" +
-                "Happy Work-Anniversary!",
-
-                progress
-            );
-
-
-        message.classList.add(
-            "glitch"
-        );
-
-    }
-
-
-    else if (
-        p >= .88 &&
-        p < .92
-    ) {
-
-        message.style.opacity = 1;
-
-        message.style.transform =
-
-            "translate(-50%, -50%) scale(1)";
-
-        message.innerHTML =
-
-            "You're the ONE;<br>" +
-            "Happy Work-Anniversary!";
-
-        message.classList.remove(
-            "glitch"
-        );
-
-    }
-
-
-    else if (
-        p >= .92 &&
-        !atBottom
-    ) {
-
-        /*
-            Fade anniversary message
-            before final credit.
-        */
-
-        const fade =
-
-            Math.max(
-                0,
-                1 -
-                (
-                    (p - .92) /
-                    .03
-                )
-            );
-
-
-        message.style.opacity =
-            fade;
-
-        message.classList.remove(
-            "glitch"
-        );
-
-    }
-
-
-    /*
-        If we are at the bottom,
-        anniversary message is OFF.
-    */
-
-    if (
-        atBottom
-    ) {
-
-        message.style.opacity = 0;
-
-    }
-
-
-
-    /* =====================================================
-       FINAL CREDIT
-       
-       IMPORTANT:
-       Instead of relying only on percentage,
-       use the actual distance from the bottom.
-       
-       Last 500px = decoding zone.
-    ===================================================== */
-
-    const finalZone =
-        500;
-
-
-    let creditProgress =
-
-        1 -
-        (
-            distanceFromBottom /
-            finalZone
-        );
-
-
-    creditProgress =
-
-        Math.max(
-            0,
-            Math.min(
-                1,
-                creditProgress
-            )
-        );
-
-
-    /*
-        Only show final credit
-        during the final 500px.
-    */
-
-    if (
-        distanceFromBottom <= finalZone
-    ) {
-
-        name.style.opacity = 0;
-
-        message.style.opacity = 0;
-
-
-        credit.style.opacity = 1;
-
-
-        const scale =
-
-            .75 +
-            creditProgress * .25;
-
-
-        credit.style.transform =
-
-            `translate(-50%, -50%)
-             scale(${scale})`;
-
-
-        /*
-            MATRIX DECODING
-        */
-
-        if (
-            creditProgress < 1
-        ) {
-
-            credit.textContent =
-
-                scrambleText(
-
-                    "In Courtesy of Land/FX",
-
-                    creditProgress
-                );
-
-
-            credit.classList.add(
-                "glitch"
-            );
-
-        }
-
-        else {
-
-            /*
-                At the actual bottom,
-                FORCE the complete text.
-            */
-
-            credit.textContent =
-                "In Courtesy of Land/FX";
-
-
-            credit.classList.remove(
-                "glitch"
-            );
-        }
-
-    }
-
-    else {
-
-        credit.style.opacity = 0;
-
-        credit.classList.remove(
-            "glitch"
-        );
-    }
-
-
-
-    /* =====================================================
-       INSTRUCTION
-    ===================================================== */
-
-    if (
-        p < .08
-    ) {
-
-        instruction.style.opacity = 1;
-
-    }
-
-    else {
-
-        instruction.style.opacity = 0;
-    }
-
-
-
-    /* =====================================================
-       FINAL FLASH
-    ===================================================== */
-
-    if (
-        atBottom
-    ) {
-
-        flash.style.opacity = .03;
-
-    }
-
-    else {
-
-        flash.style.opacity = 0;
-    }
-
-}
-
-
-
-/* =========================================================
-   INITIALIZE
-========================================================= */
-
-updateScroll();
+let scrollProgress = 0;
 
 
 /*
-    Run again after the page has
-    completely loaded.
-
-    This helps browsers that need
-    a moment to calculate the
-    document height.
+    Characters that appear while decoding
 */
 
-window.addEventListener(
-    "load",
-    function() {
+const glitchCharacters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*<>[]{}";
 
-        setTimeout(
-            updateScroll,
-            100
+
+/*
+    Change the displayed text while decoding
+*/
+
+function scrambleName(progress) {
+
+    const target = "ALEX";
+
+    let output = "";
+
+    for (let i = 0; i < target.length; i++) {
+
+        /*
+            Each letter has its own decoding point.
+        */
+
+        const letterProgress =
+            progress * target.length - i;
+
+        if (letterProgress >= 1) {
+
+            output += target[i];
+
+        } else {
+
+            output +=
+                glitchCharacters[
+                    Math.floor(
+                        Math.random() *
+                        glitchCharacters.length
+                    )
+                ];
+        }
+    }
+
+    name.textContent = output;
+}
+
+
+/* =========================================================
+   SCROLL EVENT
+========================================================= */
+
+window.addEventListener("scroll", () => {
+
+    const maxScroll =
+        document.documentElement.scrollHeight -
+        window.innerHeight;
+
+    scrollProgress =
+        window.scrollY / maxScroll;
+
+    /*
+        Clamp 0 - 1
+    */
+
+    scrollProgress =
+        Math.max(
+            0,
+            Math.min(1, scrollProgress)
         );
 
+
+    /* ---------------------------------------------
+       NAME VISIBILITY
+    --------------------------------------------- */
+
+    /*
+        Name begins appearing around 15%
+    */
+
+    const nameOpacity =
+        Math.max(
+            0,
+            Math.min(
+                1,
+                (scrollProgress - .10) / .25
+            )
+        );
+
+    name.style.opacity =
+        nameOpacity;
+
+
+    /* ---------------------------------------------
+       NAME SCALE
+    --------------------------------------------- */
+
+    const scale =
+        .75 +
+        nameOpacity * .25;
+
+    name.style.transform =
+        `translate(-50%, -50%) scale(${scale})`;
+
+
+    /* ---------------------------------------------
+       SCRAMBLE
+    --------------------------------------------- */
+
+    scrambleName(scrollProgress);
+
+
+    /* ---------------------------------------------
+       GLITCH INTENSITY
+    --------------------------------------------- */
+
+    if (
+        scrollProgress > .15 &&
+        scrollProgress < .85
+    ) {
+
+        name.classList.add("glitch");
+
+    } else {
+
+        name.classList.remove("glitch");
     }
-);
+
+
+    /* ---------------------------------------------
+       INSTRUCTION
+    --------------------------------------------- */
+
+    if (scrollProgress < .08) {
+
+        instruction.style.opacity = 1;
+
+    } else {
+
+        instruction.style.opacity =
+            Math.max(
+                0,
+                1 - scrollProgress * 3
+            );
+    }
+});
+
+
+/* =========================================================
+   INITIAL STATE
+========================================================= */
+
+scrambleName(0);
 
 </script>
 
 </body>
-
 </html>
 ```
