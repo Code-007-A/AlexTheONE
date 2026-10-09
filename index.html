@@ -1,226 +1,229 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Matrix Name Decoder</title>
+<title>Matrix Name Decoder — Anniversary Edition</title>
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    background: #000;
+    color: #00ff41;
+    font-family: "Courier New", monospace;
+    overflow-x: hidden;
+}
+
+body {
+    height: 400vh;
+}
+
+/* MATRIX BACKGROUND */
+#matrix {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background: #000;
+}
+
+/* DARK OVERLAY */
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: radial-gradient(
+        circle at center,
+        rgba(0, 255, 65, 0.05),
+        rgba(0, 0, 0, 0.65)
+    );
+}
+
+/* ALEX */
+#name {
+    position: fixed;
+    z-index: 5;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.85);
+
+    width: 95%;
+    text-align: center;
+    font-size: clamp(70px, 16vw, 240px);
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    color: #00ff41;
+    text-shadow:
+        0 0 5px #00ff41,
+        0 0 15px #00ff41,
+        0 0 35px rgba(0,255,65,.8),
+        0 0 70px rgba(0,255,65,.5);
+
+    opacity: 0;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+/* ANNIVERSARY MESSAGE */
+#message {
+    position: fixed;
+    z-index: 6;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.85);
+
+    width: 96%;
+    padding: 10px;
+    text-align: center;
+    font-size: clamp(20px, 4.5vw, 64px);
+    font-weight: bold;
+    line-height: 1.5;
+    letter-spacing: 0.04em;
+    overflow-wrap: anywhere;
+    color: #00ff41;
+
+    text-shadow:
+        0 0 5px #00ff41,
+        0 0 15px #00ff41,
+        0 0 35px rgba(0,255,65,.8),
+        0 0 70px rgba(0,255,65,.5);
+
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* GLITCH */
+.glitch {
+    animation: glitch .12s infinite;
+}
+
+@keyframes glitch {
+    0% {
+        filter: brightness(1);
+        text-shadow: 0 0 5px #00ff41, 0 0 15px #00ff41;
     }
 
-    html, body {
-        background: #000;
-        color: #00ff41;
-        font-family: "Courier New", monospace;
-        overflow-x: hidden;
-    }
-
-    /* Tall page gives us room to scroll */
-    body {
-        height: 400vh;
-    }
-
-    /* Matrix canvas stays fixed */
-    #matrix {
-        position: fixed;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-        background: #000;
-    }
-
-    /* Dark overlay helps the name stand out */
-    .overlay {
-        position: fixed;
-        inset: 0;
-        z-index: 2;
-        pointer-events: none;
-        background:
-            radial-gradient(
-                circle at center,
-                rgba(0, 255, 65, 0.05),
-                rgba(0, 0, 0, 0.65)
-            );
-    }
-
-    /* Center name */
-    #name {
-        position: fixed;
-        z-index: 5;
-
-        left: 50%;
-        top: 50%;
-
-        transform:
-            translate(-50%, -50%)
-            scale(0.85);
-
-        font-family: "Courier New", monospace;
-        font-size: clamp(70px, 16vw, 240px);
-        font-weight: bold;
-        letter-spacing: 0.08em;
-
-        color: #00ff41;
-
+    25% {
+        filter: brightness(1.8);
         text-shadow:
-            0 0 5px #00ff41,
-            0 0 15px #00ff41,
-            0 0 35px rgba(0,255,65,.8),
-            0 0 70px rgba(0,255,65,.5);
-
-        opacity: 0;
-
-        white-space: nowrap;
-
-        transition:
-            opacity 0.15s linear,
-            transform 0.15s linear;
+            -4px 2px #00ffff,
+            4px -2px #ff003c,
+            0 0 25px #00ff41;
     }
 
-    /* Glitch layers */
-    #name::before,
-    #name::after {
-        content: "ALEX";
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-
-        overflow: hidden;
-
-        opacity: 0;
-    }
-
-    #name::before {
-        color: #00ffff;
-        transform: translate(3px, -2px);
-    }
-
-    #name::after {
-        color: #ff003c;
-        transform: translate(-3px, 2px);
-    }
-
-    .glitch {
-        animation: glitch 0.15s infinite;
-    }
-
-    @keyframes glitch {
-        0% {
-            transform:
-                translate(-50%, -50%)
-                translate(0,0)
-                scale(1);
-        }
-
-        25% {
-            transform:
-                translate(-50%, -50%)
-                translate(-4px,2px)
-                scale(1.01);
-        }
-
-        50% {
-            transform:
-                translate(-50%, -50%)
-                translate(4px,-2px)
-                scale(.99);
-        }
-
-        75% {
-            transform:
-                translate(-50%, -50%)
-                translate(-2px,-1px)
-                scale(1.01);
-        }
-
-        100% {
-            transform:
-                translate(-50%, -50%)
-                translate(0,0)
-                scale(1);
-        }
-    }
-
-    /* Intro text */
-    #instruction {
-        position: fixed;
-        z-index: 6;
-
-        left: 50%;
-        bottom: 8%;
-
-        transform: translateX(-50%);
-
-        color: rgba(0,255,65,.8);
-
-        font-size: 14px;
-        letter-spacing: 4px;
-
-        text-align: center;
-
+    50% {
+        filter: brightness(.7);
         text-shadow:
-            0 0 10px #00ff41;
-
-        transition: opacity .5s ease;
+            4px -2px #00ffff,
+            -4px 2px #ff003c,
+            0 0 35px #00ff41;
     }
 
-    /* Scanline effect */
-    .scanlines {
-        position: fixed;
-        inset: 0;
-        z-index: 10;
-
-        pointer-events: none;
-
-        background:
-            repeating-linear-gradient(
-                to bottom,
-                rgba(255,255,255,0.025) 0px,
-                rgba(255,255,255,0.025) 1px,
-                transparent 2px,
-                transparent 4px
-            );
-
-        mix-blend-mode: screen;
+    75% {
+        filter: brightness(1.6);
+        text-shadow:
+            -2px -3px #00ffff,
+            3px 2px #ff003c,
+            0 0 25px #00ff41;
     }
 
-    /* Slight green glow around entire screen */
-    .screenGlow {
-        position: fixed;
-        inset: 0;
-        z-index: 9;
-
-        pointer-events: none;
-
-        box-shadow:
-            inset 0 0 100px rgba(0,255,65,.12);
+    100% {
+        filter: brightness(1);
+        text-shadow: 0 0 5px #00ff41, 0 0 15px #00ff41;
     }
+}
+
+/* INSTRUCTION */
+#instruction {
+    position: fixed;
+    z-index: 6;
+    left: 50%;
+    bottom: 8%;
+    transform: translateX(-50%);
+
+    width: 95%;
+    color: rgba(0,255,65,.8);
+    font-size: clamp(11px, 2vw, 14px);
+    letter-spacing: 4px;
+    text-align: center;
+    text-shadow: 0 0 10px #00ff41;
+    pointer-events: none;
+}
+
+/* SCANLINES */
+.scanlines {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.025) 0px,
+        rgba(255,255,255,0.025) 1px,
+        transparent 2px,
+        transparent 4px
+    );
+
+    mix-blend-mode: screen;
+}
+
+/* GREEN SCREEN GLOW */
+.screenGlow {
+    position: fixed;
+    inset: 0;
+    z-index: 9;
+    pointer-events: none;
+    box-shadow: inset 0 0 100px rgba(0,255,65,.12);
+}
+
+/* SCREEN SHAKE */
+.screenShake {
+    animation: screenShake .07s steps(2, end) infinite;
+}
+
+@keyframes screenShake {
+    0%   { translate: 0 0; }
+    20%  { translate: -8px 5px; }
+    40%  { translate: 9px -6px; }
+    60%  { translate: -12px -3px; }
+    80%  { translate: 7px 7px; }
+    100% { translate: 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .glitch,
+    .screenShake {
+        animation: none;
+    }
+}
 </style>
 </head>
 
 <body>
 
 <canvas id="matrix"></canvas>
-
 <div class="overlay"></div>
 
 <div id="name">ALEX</div>
 
-<div id="instruction">
-    SCROLL TO DECODE
+<div id="message">
+    You're the ONE<br>
+    Happy Anniversary, courtesy of Land/FX
 </div>
+
+<div id="instruction">SCROLL TO DECODE</div>
 
 <div class="scanlines"></div>
 <div class="screenGlow"></div>
-
 
 <script>
 
@@ -233,8 +236,7 @@ const ctx = canvas.getContext("2d");
 
 let width;
 let height;
-
-let fontSize = 18;
+const fontSize = 18;
 let columns;
 let drops = [];
 
@@ -242,92 +244,49 @@ const matrixCharacters =
     "アァカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&*@";
 
 function resizeCanvas() {
-
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
 
     columns = Math.floor(width / fontSize);
-
     drops = [];
 
     for (let i = 0; i < columns; i++) {
-
-        drops[i] =
-            Math.random() * -50;
+        drops[i] = Math.random() * -50;
     }
 }
 
 resizeCanvas();
-
 window.addEventListener("resize", resizeCanvas);
 
-
-/* =========================================================
-   DRAW MATRIX
-========================================================= */
-
 function drawMatrix() {
-
-    /*
-        Slight black transparency creates the
-        classic Matrix trailing effect.
-    */
-
     ctx.fillStyle = "rgba(0,0,0,0.075)";
     ctx.fillRect(0, 0, width, height);
 
-    ctx.font =
-        fontSize + "px Courier New";
+    ctx.font = fontSize + "px Courier New";
 
     for (let i = 0; i < drops.length; i++) {
-
         const character =
             matrixCharacters[
-                Math.floor(
-                    Math.random() *
-                    matrixCharacters.length
-                )
+                Math.floor(Math.random() * matrixCharacters.length)
             ];
 
-        /*
-            Random brightness
-        */
-
-        const brightness =
-            Math.random();
+        const brightness = Math.random();
 
         if (brightness > .94) {
-
             ctx.fillStyle = "#ffffff";
-
         } else if (brightness > .75) {
-
             ctx.fillStyle = "#66ff88";
-
         } else {
-
             ctx.fillStyle = "#00ff41";
         }
 
-        ctx.fillText(
-            character,
-            i * fontSize,
-            drops[i] * fontSize
-        );
+        ctx.fillText(character, i * fontSize, drops[i] * fontSize);
 
-        /*
-            Reset individual streams
-        */
-
-        if (
-            drops[i] * fontSize > height &&
-            Math.random() > .975
-        ) {
-
+        if (drops[i] * fontSize > height && Math.random() > .975) {
             drops[i] = 0;
         }
 
-        drops[i] += 0.45;
+        drops[i] += .45;
     }
 
     requestAnimationFrame(drawMatrix);
@@ -341,166 +300,201 @@ drawMatrix();
 ========================================================= */
 
 const name = document.getElementById("name");
-const instruction =
-    document.getElementById("instruction");
-
-let scrollProgress = 0;
-
-
-/*
-    Characters that appear while decoding
-*/
+const message = document.getElementById("message");
+const instruction = document.getElementById("instruction");
 
 const glitchCharacters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*<>[]{}";
 
+const nameText = "ALEX";
 
-/*
-    Change the displayed text while decoding
-*/
+const messageText =
+    "You're the ONE\nHappy Anniversary, courtesy of Land/FX";
 
-function scrambleName(progress) {
+function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+}
 
-    const target = "ALEX";
-
+/* Gradually reveal letters from random characters */
+function scrambleText(target, progress) {
     let output = "";
 
     for (let i = 0; i < target.length; i++) {
+        const character = target[i];
 
-        /*
-            Each letter has its own decoding point.
-        */
+        if (
+            character === " " ||
+            character === "\n" ||
+            character === "," ||
+            character === "'" ||
+            character === "/" ||
+            character === "-"
+        ) {
+            output += character;
+            continue;
+        }
 
-        const letterProgress =
-            progress * target.length - i;
+        const letterProgress = progress * target.length - i;
 
         if (letterProgress >= 1) {
-
-            output += target[i];
-
+            output += character;
         } else {
-
-            output +=
-                glitchCharacters[
-                    Math.floor(
-                        Math.random() *
-                        glitchCharacters.length
-                    )
-                ];
+            output += glitchCharacters[
+                Math.floor(Math.random() * glitchCharacters.length)
+            ];
         }
     }
 
-    name.textContent = output;
+    return output;
+}
+
+/* Escape text safely and retain the line break */
+function scrambleHTML(target, progress) {
+    return scrambleText(target, progress)
+        .split("\n")
+        .map(line => line
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+        )
+        .join("<br>");
 }
 
 
 /* =========================================================
-   SCROLL EVENT
+   UPDATED SCENE CONTROLLER
 ========================================================= */
 
-window.addEventListener("scroll", () => {
-
+function updateScene() {
     const maxScroll =
         document.documentElement.scrollHeight -
         window.innerHeight;
 
-    scrollProgress =
-        window.scrollY / maxScroll;
+    const progress = maxScroll > 0
+        ? clamp(window.scrollY / maxScroll, 0, 1)
+        : 0;
 
-    /*
-        Clamp 0 - 1
-    */
+    /* STAGE 1: MATRIX ONLY — 0% TO 10% */
+    if (progress < .10) {
+        name.style.opacity = 0;
+        message.style.opacity = 0;
 
-    scrollProgress =
-        Math.max(
-            0,
-            Math.min(1, scrollProgress)
-        );
+        name.classList.remove("glitch");
+        message.classList.remove("glitch");
+    }
 
+    /* STAGE 2: ALEX DECODES — 10% TO 35% */
+    else if (progress < .35) {
+        const p = (progress - .10) / .25;
 
-    /* ---------------------------------------------
-       NAME VISIBILITY
-    --------------------------------------------- */
+        name.style.opacity = 1;
+        message.style.opacity = 0;
 
-    /*
-        Name begins appearing around 15%
-    */
+        name.textContent = scrambleText(nameText, p);
 
-    const nameOpacity =
-        Math.max(
-            0,
-            Math.min(
-                1,
-                (scrollProgress - .10) / .25
-            )
-        );
-
-    name.style.opacity =
-        nameOpacity;
-
-
-    /* ---------------------------------------------
-       NAME SCALE
-    --------------------------------------------- */
-
-    const scale =
-        .75 +
-        nameOpacity * .25;
-
-    name.style.transform =
-        `translate(-50%, -50%) scale(${scale})`;
-
-
-    /* ---------------------------------------------
-       SCRAMBLE
-    --------------------------------------------- */
-
-    scrambleName(scrollProgress);
-
-
-    /* ---------------------------------------------
-       GLITCH INTENSITY
-    --------------------------------------------- */
-
-    if (
-        scrollProgress > .15 &&
-        scrollProgress < .85
-    ) {
+        name.style.transform =
+            `translate(-50%, -50%) scale(${0.85 + p * 0.15})`;
 
         name.classList.add("glitch");
+        message.classList.remove("glitch");
+    }
 
-    } else {
+    /* STAGE 3: ALEX HOLDS — 35% TO 48% */
+    else if (progress < .48) {
+        name.style.opacity = 1;
+        name.textContent = nameText;
 
+        name.style.transform =
+            "translate(-50%, -50%) scale(1)";
+
+        message.style.opacity = 0;
+
+        name.classList.remove("glitch");
+        message.classList.remove("glitch");
+    }
+
+    /* STAGE 4: ALEX FADES OUT — 48% TO 53% */
+    else if (progress < .53) {
+        const fade = 1 - (progress - .48) / .05;
+
+        name.style.opacity = fade;
+        message.style.opacity = 0;
+
+        name.classList.remove("glitch");
+        message.classList.remove("glitch");
+    }
+
+    /* STAGE 5: MESSAGE DECODES — 53% TO 82% */
+    else if (progress < .82) {
+        const p = (progress - .53) / .29;
+
+        name.style.opacity = 0;
+        message.style.opacity = 1;
+
+        message.innerHTML = scrambleHTML(messageText, p);
+
+        message.style.transform =
+            `translate(-50%, -50%) scale(${0.85 + p * 0.15})`;
+
+        message.classList.add("glitch");
         name.classList.remove("glitch");
     }
 
+    /* STAGE 6: MESSAGE STAYS VISIBLE — 82% TO BOTTOM */
+    else {
+        name.style.opacity = 0;
+        message.style.opacity = 1;
 
-    /* ---------------------------------------------
-       INSTRUCTION
-    --------------------------------------------- */
+        message.innerHTML =
+            "You're the ONE<br>" +
+            "Happy Anniversary, courtesy of Land/FX";
 
-    if (scrollProgress < .08) {
+        message.style.transform =
+            "translate(-50%, -50%) scale(1)";
 
-        instruction.style.opacity = 1;
-
-    } else {
-
-        instruction.style.opacity =
-            Math.max(
-                0,
-                1 - scrollProgress * 3
-            );
+        message.classList.remove("glitch");
+        name.classList.remove("glitch");
     }
-});
+
+    /* HIDE INSTRUCTION AFTER SCROLLING STARTS */
+    instruction.style.opacity = progress < .08 ? 1 : 0;
+}
+
+window.addEventListener("scroll", updateScene, { passive: true });
+updateScene();
 
 
 /* =========================================================
-   INITIAL STATE
+   SCREEN SHAKE ON UPWARD OR DOWNWARD SCROLL
 ========================================================= */
 
-scrambleName(0);
+const shakeElements = [
+    canvas,
+    document.querySelector(".overlay"),
+    name,
+    message,
+    instruction
+];
+
+let shakeTimer;
+
+window.addEventListener("scroll", () => {
+    shakeElements.forEach(element => {
+        element.classList.add("screenShake");
+    });
+
+    clearTimeout(shakeTimer);
+
+    shakeTimer = setTimeout(() => {
+        shakeElements.forEach(element => {
+            element.classList.remove("screenShake");
+        });
+    }, 140);
+
+}, { passive: true });
 
 </script>
 
 </body>
 </html>
+```
